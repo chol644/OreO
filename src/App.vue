@@ -1,26 +1,26 @@
 <script setup>
-import HelloWorld from "./components/HelloWorld.vue";
-import TheWelcome from "./components/TheWelcome.vue";
-import Header from "./components/Header.vue"; // Adjust the path
+import HelloWorld from './components/HelloWorld.vue';
+import TheWelcome from './components/TheWelcome.vue';
+import Header from './components/Header.vue'; // Adjust the path
 </script>
 
 <template>
   <div class="container">
     <!-- <Header></Header> -->
     <div class="card card-body border-0 pt-0">
-        <div class="border-0">
-          <router-view></router-view>
-          <!-- default -->
-        </div>
+      <div class="border-0">
+        <router-view></router-view>
+        <!-- default -->
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import Header from "./components/Header.vue";
+import Header from './components/Header.vue';
 
 export default {
-  name: "App",
+  name: 'App',
   components: { Header },
 };
 </script>
