@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 import Login from '@/pages/Login.vue';
 import NotFound from '@/pages/NotFound.vue';
+import Signup from '@/pages/Signup.vue';
+import ProfileEdit from '@/pages/ProfileEdit.vue';
 
 const router = createRouter({
   history: createWebHistory(),
@@ -11,6 +13,22 @@ const router = createRouter({
       name: 'Login',
       components: {
         default: Login,
+        // left: HomeLeft,
+      },
+    },
+    {
+      path: '/signup',
+      name: 'Signup',
+      components: {
+        default: Signup
+        // left: HomeLeft,
+      },
+    },
+    {
+      path: '/profile-edit',
+      name: 'ProfileEdit',
+      components: {
+        default: ProfileEdit
         // left: HomeLeft,
       },
     },

@@ -1,5 +1,7 @@
 <template>
-  <div class="login-container d-flex justify-content-center align-items-center bg-light">
+  <div
+    class="login-container d-flex justify-content-center align-items-center bg-light"
+  >
     <div class="login-form p-4 p-md-5 border rounded bg-white shadow-sm">
       <!-- Optional: Sub-heading like the original -->
       <!-- <p class="text-muted text-center text-uppercase small mb-2">WELCOME BACK</p> -->
@@ -52,7 +54,7 @@
               id="rememberMe"
             />
             <label class="form-check-label small" for="rememberMe">
-                로그인 기억하기
+              로그인 기억하기
             </label>
           </div>
           <a
@@ -105,7 +107,8 @@
 
 <script setup>
 import { ref, reactive, computed } from "vue";
-
+import { useRouter } from 'vue-router';
+const router = useRouter();
 // --- Reactive Data ---
 const formData = reactive({
   email: "", // Start empty for login
@@ -151,7 +154,7 @@ const loginWithApple = () => {
 
 const goToSignup = () => {
   console.log("Navigate to Signup Page");
-  alert("Sign Up Here clicked");
+  router.push("/Signup"); // Adjust the route as per your setup
   // Add navigation logic (e.g., using Vue Router)
 };
 
@@ -167,6 +170,7 @@ const forgotPassword = () => {
 .login-container {
   /* You can add a background image or gradient here if desired */
   /* background: linear-gradient(to right, #ece9e6, #ffffff); */
+  height:40rem;
 }
 
 .login-form {
