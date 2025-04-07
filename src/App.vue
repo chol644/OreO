@@ -1,21 +1,29 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+import HelloWorld from "./components/HelloWorld.vue";
+import TheWelcome from "./components/TheWelcome.vue";
+import Header from "./components/Header.vue"; // Adjust the path
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+  <div class="container">
+    <!-- <Header></Header> -->
+    <div class="card card-body border-0 pt-0">
+        <div class="border-0">
+          <router-view></router-view>
+          <!-- default -->
+        </div>
     </div>
-  </header>
-
-  <main>
-    <TheWelcome />
-  </main>
+  </div>
 </template>
+
+<script>
+import Header from "./components/Header.vue";
+
+export default {
+  name: "App",
+  components: { Header },
+};
+</script>
 
 <style scoped>
 header {
