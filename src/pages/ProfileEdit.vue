@@ -2,7 +2,7 @@
     <div class="profile-edit-container d-flex justify-content-center align-items-center bg-light">
       <div class="profile-edit-form p-4 p-md-5 bg-white shadow-sm rounded">
   
-        <h2 class="h3 fw-bold text-center mb-3">내 정보 수정</h2>
+        <h2 class="h3 text-center mb-3">내 정보 수정</h2>
         <hr class="mb-4">
   
         <form @submit.prevent="handleUpdateProfile">
