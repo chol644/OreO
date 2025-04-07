@@ -106,9 +106,9 @@
 </template>
 
 <script setup>
+import router from "@/components/router";
 import { ref, reactive, computed } from "vue";
 import { useRouter } from 'vue-router';
-const router = useRouter();
 // --- Reactive Data ---
 const formData = reactive({
   email: "", // Start empty for login
@@ -130,7 +130,7 @@ const togglePasswordVisibility = () => {
 const handleLogin = () => {
   console.log("Login attempt:", formData);
   // Add your login logic here (e.g., API call)
-  alert(`Logging in with Email: ${formData.email}`);
+  router.push('/');
   // Handle response, redirect on success, show errors on failure
 };
 

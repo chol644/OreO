@@ -55,10 +55,9 @@
   </template>
   
   <script setup>
-  import { ref, reactive, onMounted } from 'vue';
-  import { useRouter } from 'vue-router'; // 취소 시 페이지 이동을 위해
+  import router from '@/components/router';
+import { ref, reactive, onMounted } from 'vue';
   
-  const router = useRouter();
   
   // 실제로는 API 등에서 가져올 사용자 데이터
   const userData = ref({
@@ -95,8 +94,8 @@
     // 3. 성공/실패 처리
   
     // 예시: 성공 알림 후 이전 페이지로 이동
-    alert('프로필 정보가 수정되었습니다.');
-    // router.push('/my-page'); // 또는 특정 페이지로 이동
+    
+    router.push('/'); // 또는 특정 페이지로 이동
     // router.go(-1); // 이전 페이지로 이동
   };
   
