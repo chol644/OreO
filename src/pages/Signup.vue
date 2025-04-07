@@ -70,6 +70,7 @@
 </template>
 
 <script setup>
+import router from "@/components/router";
 import { ref, reactive, computed } from "vue";
 
 // --- Reactive Data ---
@@ -94,7 +95,7 @@ const togglePasswordVisibility = () => {
 const handleSignup = () => {
   console.log("Signup attempt:", formData);
   // Add your signup logic here (e.g., API call)
-  alert(`Signing up with Name: ${formData.name}, Email: ${formData.email}`);
+  router.push('/');
   // Handle response, redirect on success, show errors on failure
 };
 
