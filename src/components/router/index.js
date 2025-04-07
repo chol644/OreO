@@ -20,7 +20,7 @@ const router = createRouter({
       path: '/signup',
       name: 'Signup',
       components: {
-        default: Signup
+        default: Signup,
         // left: HomeLeft,
       },
     },
@@ -28,15 +28,20 @@ const router = createRouter({
       path: '/profile-edit',
       name: 'ProfileEdit',
       components: {
-        default: ProfileEdit
+        default: ProfileEdit,
         // left: HomeLeft,
       },
     },
     {
       path: '/:pathMatch(.*)*', // 모든 경로와 일치 (정규식 사용)
       name: 'NotFound',
-      component: NotFound
-    }
+      component: NotFound,
+    },
+    {
+      path: '/chart',
+      name: 'chart',
+      component: () => import('@/pages/Chart.vue'),
+    },
   ],
 });
 export default router;
