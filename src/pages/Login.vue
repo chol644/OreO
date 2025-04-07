@@ -170,7 +170,7 @@ const forgotPassword = () => {
 .login-container {
   /* You can add a background image or gradient here if desired */
   /* background: linear-gradient(to right, #ece9e6, #ffffff); */
-  height:40rem;
+  /* height:40rem; */
 }
 
 .login-form {

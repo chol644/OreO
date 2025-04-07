@@ -1,23 +1,16 @@
 <template>
   <div
-    class="signup-container d-flex justify-content-center align-items-center min-vh-100 bg-light"
+    class="signup-container d-flex justify-content-center align-items-center bg-light"
   >
-    <div
-      class="signup-form p-4 p-md-5 bg-white shadow-sm"
-    >
-      <h2 class="h3 fw-bold text-center text-uppercase mb-2">
-        회원가입
-      </h2>
+    <div class="signup-form p-4 bg-white shadow-sm">
+      <h2 class="h3 text-center text-uppercase mb-2">회원가입</h2>
 
       <form @submit.prevent="handleSignup">
         <!-- Name Input -->
-        <div class="input-group mb-3">
-          <span class="input-group-text bg-transparent border-end-0 text-muted">
-            <i class="bi bi-person"></i>
-          </span>
+        <div class="input-group mb-3 ">
           <input
             type="text"
-            class="form-control border-start-0"
+            class="form-control "
             placeholder="닉네임"
             aria-label="Your Name"
             v-model="formData.name"
@@ -27,12 +20,9 @@
 
         <!-- Email Input -->
         <div class="input-group mb-3">
-          <span class="input-group-text bg-transparent border-end-0 text-muted">
-            <i class="bi bi-envelope"></i>
-          </span>
           <input
             type="email"
-            class="form-control border-start-0"
+            class="form-control"
             placeholder="example@email.com"
             aria-label="Email Address"
             v-model="formData.email"
@@ -42,9 +32,6 @@
 
         <!-- Password Input -->
         <div class="input-group mb-4">
-          <span class="input-group-text bg-transparent border-end-0 text-muted">
-            <i class="bi bi-lock"></i>
-          </span>
           <input
             :type="passwordFieldType"
             class="form-control pe-5"
@@ -59,7 +46,7 @@
             class="btn btn-sm btn-link text-muted text-decoration-none border border-start-0"
             style="font-size: 0.75rem; padding-top: 0; padding-bottom: 0"
           >
-          <i :class="showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+            <i :class="showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
           </button>
         </div>
 
@@ -68,7 +55,7 @@
           class="w-100 btn btn-exclusive btn-lg d-flex justify-content-between align-items-center"
           type="submit"
         >
-          <span>Become a Member</span>
+          <span>회원가입</span>
           <i class="bi bi-arrow-right"></i>
         </button>
       </form>
@@ -130,6 +117,7 @@ const handleSignup = () => {
 .signup-form {
   border: 1px solid #dee2e6; /* Add border like the image if shadow isn't enough */
   border-radius: 0.375rem; /* Bootstrap's default radius */
+  max-width: 20rem;
 }
 
 /* Input Group Styling to match image */
