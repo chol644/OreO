@@ -98,8 +98,14 @@ export default defineComponent({
     expenseAmount() {
       return this.transactionsStore.getTotalExpense;
     },
+    monthlyExpenseAmount() {
+      return this.transactionsStore.getTotalMonthlyExpense; // 월별 지출 합계
+    },
     totalAmount() {
       return this.incomeAmount - this.expenseAmount;
+    },
+    selectedMonth() {
+      return format(this.transactionsStore.selectedDate, 'yyyy년 MM월');
     },
     selectedDateFormatted() {
       return format(
@@ -133,6 +139,16 @@ export default defineComponent({
 
     closeTransactionForm() {
       this.showAddTransactionModal = false;
+    },
+    onMonthChange(newDate) {
+      // 선택된 날짜 업데이트
+      this.transactionsStore.setSelectedDate(newDate);
+
+      // 새로운 월의 거래 데이터를 가져오기 위한 함수 호출
+      this.transactionsStore.fetchTransactions().then(() => {
+        // 데이터 가져온 후 UI를 강제로 업데이트
+        this.$forceUpdate();
+      });
     },
   },
   mounted() {

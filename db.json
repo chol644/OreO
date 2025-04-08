@@ -31,6 +31,15 @@
           "memo": "",
           "date": "2025-04-08T06:07:01.168Z",
           "transactionId": 101
+        },
+        {
+          "type": "income",
+          "amount": 12222,
+          "category": "월급",
+          "asset": "카드",
+          "memo": "",
+          "date": "2025-05-01T15:00:00.000Z",
+          "transactionId": 102
         }
       ]
     }
