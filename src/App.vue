@@ -1,3 +1,8 @@
+
+<script setup>
+import Header from "./components/Header.vue"; // Adjust the path
+</script>
+
 <template>
   <div class="app-container">
     <Header />

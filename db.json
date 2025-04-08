@@ -2,26 +2,8 @@
   "users": [
     {
       "transactions": [
-        {
-          "type": "expense",
-          "amount": 1313,
-          "category": "문화생활",
-          "asset": "카드",
-          "memo": "",
-          "date": "2025-04-24T15:00:00.000Z",
-          "transactionId": 106
-        },
-        {
-          "type": "income",
-          "amount": 100000,
-          "category": "상여",
-          "asset": "카드",
-          "memo": "",
-          "date": "2025-04-24T15:00:00.000Z",
-          "transactionId": 107
-        }
-      ],
-      "id": "1"
+       
+      ],         
     }
   ]
 }
