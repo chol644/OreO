@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
 import { isSameDay } from 'date-fns';
+import { isSameMonth } from 'date-fns';
 
 export const useTransactionStore = defineStore('transaction', {
   state: () => ({
@@ -19,13 +20,24 @@ export const useTransactionStore = defineStore('transaction', {
     },
     getTotalIncome(state) {
       return state.transactions
-        .filter((t) => t.type === 'income')
+        .filter(
+          (t) =>
+            t.type === 'income' &&
+            isSameMonth(new Date(t.date), state.selectedDate)
+        )
         .reduce((sum, t) => sum + t.amount, 0);
     },
     getTotalExpense(state) {
       return state.transactions
-        .filter((t) => t.type === 'expense')
+        .filter(
+          (t) =>
+            t.type === 'expense' &&
+            isSameMonth(new Date(t.date), state.selectedDate)
+        )
         .reduce((sum, t) => sum + t.amount, 0);
+    },
+    getTotalAmount(state) {
+      return this.getTotalIncome - this.getTotalExpense;
     },
   },
   actions: {
