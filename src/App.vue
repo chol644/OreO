@@ -1,53 +1,45 @@
+
 <script setup>
 import Header from "./components/Header.vue"; // Adjust the path
 </script>
 
 <template>
-  <div class="container">
-    <!-- <Header></Header> -->
-    <div class="card card-body border-0 pt-0">
-        <div class="border-0">
-          <router-view></router-view>
-          <!-- default -->
-        </div>
-    </div>
+  <div class="app-container">
+    <Header />
+    <main class="main-content">
+      <router-view />
+    </main>
   </div>
 </template>
-
 <script>
-import Header from "./components/Header.vue";
+import Header from './components/layout/Header.vue';
 
 export default {
-  name: "App",
-  components: { Header },
+  name: 'App',
+  components: {
+    Header,
+  },
 };
 </script>
-
-<style scoped>
-header {
-  line-height: 1.5;
+<style>
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #f9fafb;
+  font-family: 'Noto Sans KR', Arial, sans-serif;
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
+.main-content {
+  flex: 1;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
 }
 </style>

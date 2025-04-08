@@ -1,80 +1,9 @@
 {
   "users": [
     {
-      "id": "1",
-      "email": "yerin@example.com",
-      "password": "hashedpassword",
-      "nickname": "예린",
       "transactions": [
-        {
-          "transactionId": 101,
-          "date": "2025-03-28",
-          "amount": 15000,
-          "asset": "카드",
-          "category": " 식비",
-          "memo": "스타벅스",
-          "type": "expense"
-        },
-        {
-          "transactionId": 102,
-          "date": "2025-03-29",
-          "amount": 500000,
-          "asset": "카드",
-          "category": "월급",
-          "memo": "월급",
-          "type": "income"
-        },
-        {
-          "type": "expense",
-          "amount": 14124124,
-          "category": "🚌 교통비",
-          "asset": "💵 현금",
-          "memo": "1241242",
-          "date": "2025-04-07T07:58:03.810Z",
-          "transactionId": 103
-        },
-        {
-          "type": "expense",
-          "amount": 1243,
-          "category": "🚌 교통비",
-          "asset": "💳 카드",
-          "memo": "1234",
-          "date": "2025-04-07T08:20:29.532Z",
-          "transactionId": 104
-        },
-        {
-          "type": "income",
-          "amount": 1234,
-          "category": "💸 용돈",
-          "asset": "💵 현금",
-          "memo": "1234",
-          "date": "2025-04-07T08:20:41.618Z",
-          "transactionId": 105
-        },
-        {
-          "type": "expense",
-          "amount": null,
-          "category": "🍔 식비",
-          "asset": "💳 카드",
-          "memo": "₩13₩",
-          "date": "2025-04-07T08:27:54.347Z",
-          "transactionId": 106
-        }
-      ]
-    },
-    {
-      "id": "9b43",
-      "email": "rmagksfla@example.com",
-      "password": "1234",
-      "nickname": "한림찡123",
-      "transactions": []
-    },
-    {
-      "id": "62b3",
-      "email": "rmagksfla1@example.com",
-      "password": "1234",
-      "nickname": "한림찡",
-      "transactions": []
+       
+      ],         
     }
   ]
 }
