@@ -42,7 +42,7 @@
         </button>
       </span>
 
-      <!-- 금액 오름/내림 -->
+      <!-- 금액 오름순/내림순 -->
       <span>
         <button class="btn btn-outline-dark bg-light" @click="sortByAmount">
           금액 {{ sort.amountAsc ? '▲' : '▼' }}
@@ -68,7 +68,7 @@
       </span>
     </div>
 
-    <!-- 총합 -->
+    <!-- 총합(전체, 수입, 지출) -->
     <div class="total d-flex justify-content-center gap-2 flex-wrap my-3">
       <span class="bg-secondary text-white">
         전체({{ filteredTransactions.length }})<br />
@@ -138,6 +138,7 @@ export default {
   },
   computed: {
     filteredTransactions() {
+      // 날짜 필터링
       return this.transactions
         .filter((tx) => {
           const txDate = new Date(tx.date);
@@ -169,24 +170,29 @@ export default {
     },
 
     incomeCount() {
+      // 수입 카운트
       return this.filteredTransactions.filter((tx) => tx.type === 'income')
         .length;
     },
     expenseCount() {
+      // 지출 카운트
       return this.filteredTransactions.filter((tx) => tx.type === 'expense')
         .length;
     },
     incomeTotal() {
+      // 수입 총합
       return this.filteredTransactions
         .filter((tx) => tx.type === 'income')
         .reduce((sum, tx) => sum + tx.amount, 0);
     },
     expenseTotal() {
+      // 지출 총합
       return this.filteredTransactions
         .filter((tx) => tx.type === 'expense')
         .reduce((sum, tx) => sum + tx.amount, 0);
     },
     totalAmount() {
+      // 총 합계
       return this.incomeTotal - this.expenseTotal;
     },
   },
@@ -195,9 +201,7 @@ export default {
       fetch('http://localhost:3000/users')
         .then((res) => res.json())
         .then((users) => {
-          const user = users.find(
-            (u) => u.userId.trim() === this.userId.trim()
-          );
+          const user = users.find((u) => u.id?.trim() === this.userId?.trim());
           if (user && user.transactions) {
             this.transactions = user.transactions;
           } else {
@@ -240,6 +244,7 @@ export default {
     },
   },
   mounted() {
+    this.userId = localStorage.getItem('userId');
     this.fetchTransactions();
   },
 };
@@ -293,7 +298,7 @@ body {
 }
 
 .period-filter input {
-  width: 90px;
+  width: auto;
   height: 36px;
   border: 1px solid #ced4da;
   border-radius: 8px;
