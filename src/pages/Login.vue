@@ -167,7 +167,7 @@ const handleLogin = async () => {
       console.log("Login successful:", matchingUsers[0]);
       // --- Login Success ---
       // Optionally store user data (e.g., in Pinia/Vuex or localStorage)
-      // localStorage.setItem('userData', JSON.stringify(matchingUsers[0])); // Example
+      localStorage.setItem('userData', JSON.stringify(matchingUsers[0])); // Example
       // alert('로그인 성공!');
       router.push('/'); // Redirect
     } else {
