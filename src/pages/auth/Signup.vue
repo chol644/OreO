@@ -96,18 +96,18 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed } from "vue";
-import { useRouter } from "vue-router"; // Import useRouter
-import axios from "axios"; // Import axios
+import { ref, reactive, computed } from 'vue';
+import { useRouter } from 'vue-router'; // Import useRouter
+import axios from 'axios'; // Import axios
 
 // --- Router Instance ---
 const router = useRouter();
 
 // --- Reactive Data ---
 const formData = reactive({
-  nickname: "", // Changed from name to nickname for clarity
-  email: "",
-  password: "",
+  nickname: '', // Changed from name to nickname for clarity
+  email: '',
+  password: '',
 });
 
 const showPassword = ref(false);
@@ -116,7 +116,7 @@ const isLoading = ref(false); // To indicate loading state
 
 // --- Computed Properties ---
 const passwordFieldType = computed(() => {
-  return showPassword.value ? "text" : "password";
+  return showPassword.value ? 'text' : 'password';
 });
 
 // --- Methods ---
@@ -127,7 +127,7 @@ const togglePasswordVisibility = () => {
 const handleSignup = async () => {
   signupError.value = null; // Reset error on new attempt
   isLoading.value = true; // Set loading state
-  console.log("Signup attempt:", formData.nickname, formData.email);
+  console.log('Signup attempt:', formData.nickname, formData.email);
 
   // --- !!! SECURITY WARNING !!! ---
   // NEVER send plain text passwords to a real backend.
@@ -145,7 +145,7 @@ const handleSignup = async () => {
 
   try {
     // Define the API endpoint (adjust if your json-server is different)
-    const apiUrl = "/api/users"; // POST to the root collection
+    const apiUrl = '/api/users'; // POST to the root collection
 
     console.log(`Checking if email exists: ${formData.email}`);
     const checkResponse = await axios.get(apiUrl, {
@@ -156,7 +156,7 @@ const handleSignup = async () => {
 
     // If the response data array is not empty, the email exists
     if (checkResponse.data && checkResponse.data.length > 0) {
-      signupError.value = "이미 사용 중인 이메일입니다.";
+      signupError.value = '이미 사용 중인 이메일입니다.';
       isLoading.value = false;
       return; // Stop the signup process
     }
@@ -168,37 +168,37 @@ const handleSignup = async () => {
     // Check if the request was successful (axios typically considers 2xx successful)
     // json-server usually returns 201 Created
     if (response.status === 201) {
-      console.log("Signup successful:", response.data);
+      console.log('Signup successful:', response.data);
       // --- Signup Success ---
-      alert("회원가입 성공! 로그인 페이지로 이동합니다.");
-      router.push("/login"); // Redirect to login page
+      alert('회원가입 성공! 로그인 페이지로 이동합니다.');
+      router.push('/login'); // Redirect to login page
     } else {
       // Should not happen often with basic json-server POST if data format is okay
       // but good practice to handle unexpected success codes
-      console.warn("Signup completed with unexpected status:", response.status);
+      console.warn('Signup completed with unexpected status:', response.status);
       signupError.value = `회원가입 완료 (상태: ${response.status}). 로그인 해보세요.`;
-      router.push("/login"); // Still attempt redirect
+      router.push('/login'); // Still attempt redirect
     }
   } catch (error) {
-    console.error("Signup error:", error);
+    console.error('Signup error:', error);
     if (error.response) {
       // Server responded with a status code outside the 2xx range
-      console.error("Error data:", error.response.data);
-      console.error("Error status:", error.response.status);
+      console.error('Error data:', error.response.data);
+      console.error('Error status:', error.response.status);
       // Basic check - a real backend might give specific error codes (e.g., 409 for duplicate email)
       if (error.response.status === 500) {
         signupError.value =
-          "서버 오류가 발생했습니다. 이메일이 이미 사용 중일 수 있습니다.";
+          '서버 오류가 발생했습니다. 이메일이 이미 사용 중일 수 있습니다.';
       } else {
         signupError.value = `회원가입 중 오류가 발생했습니다 (오류 코드: ${error.response.status}).`;
       }
     } else if (error.request) {
       // Request was made but no response received
       signupError.value =
-        "서버에 연결할 수 없습니다. 네트워크 또는 서버 상태를 확인하세요.";
+        '서버에 연결할 수 없습니다. 네트워크 또는 서버 상태를 확인하세요.';
     } else {
       // Error setting up the request
-      signupError.value = "회원가입 요청 중 오류가 발생했습니다.";
+      signupError.value = '회원가입 요청 중 오류가 발생했습니다.';
     }
   } finally {
     isLoading.value = false; // Reset loading state
@@ -207,7 +207,7 @@ const handleSignup = async () => {
 
 // Method to navigate to login
 const goToLogin = () => {
-  router.push("/login");
+  router.push('/login');
 };
 </script>
 

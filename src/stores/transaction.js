@@ -56,33 +56,33 @@ export const useTransactionStore = defineStore('transaction', {
     },
     async fetchTransactions() {
       try {
-        // const userId = localStorage.getItem('userId');
-        // if (!userId) throw new Error('로그인된 사용자 없음');
+        const userId = localStorage.getItem('userId');
+        if (!userId) throw new Error('로그인된 사용자 없음');
 
-        // userId를 기반으로 해당 유저 조회
-        // const res = await axios.get(`/api/users?userId=${userId}`);
-        const res = await axios.get('/api/users/1');
-        const user = res.data;
+        // ✅ 올바른 요청 방식 (query로 요청해야 함)
+        const res = await fetch(`/api/users?id=${userId}`);
+        const users = await res.json(); // ✅ fetch는 .json()으로 파싱
 
+        if (!Array.isArray(users) || users.length === 0) {
+          throw new Error('사용자를 찾을 수 없습니다');
+        }
+
+        const user = users[0];
         this.transactions = user.transactions || [];
-
-        // else {
-        //   console.warn('해당 유저 없음');
-        //   this.transactions = [];
-        // }
       } catch (err) {
-        console.error('거래 불러오기 실패:', err);
+        console.log('거래 불러오기 실패:', err);
         this.transactions = [];
       }
     },
-    async addTransaction(newTransaction) {
-      //   const userId = localStorage.getItem('userId');
-      //   const userRes = await fetch(`/api/users?userId=${userId}`);
-      //   const users = await userRes.json();
-      //   const user = users[0]; // 배열이라서
 
-      const userRes = await axios.get('/api/users/1');
-      const user = userRes.data;
+    async addTransaction(newTransaction) {
+      const userId = localStorage.getItem('userId');
+      if (!userId) throw new Error('userId 없음');
+
+      const res = await fetch(`/api/users/${userId}`);
+      if (!res.ok) throw new Error('사용자 요청 실패');
+
+      const user = await res.json();
 
       const lastId =
         user.transactions.length > 0
@@ -92,53 +92,52 @@ export const useTransactionStore = defineStore('transaction', {
 
       const updatedTransactions = [...user.transactions, newTransaction];
 
-      const res = await fetch(`/api/users/${user.id}`, {
+      const updateRes = await fetch(`/api/users/${userId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ transactions: updatedTransactions }),
       });
 
-      if (!res.ok) {
-        const errorText = await res.text();
+      if (!updateRes.ok) {
+        const errorText = await updateRes.text();
         throw new Error(`저장 실패: ${errorText}`);
       }
 
       this.transactions.push(newTransaction);
     },
+
     async updateTransaction(updatedTransaction) {
       try {
-        //   const userId = localStorage.getItem('userId');
-        //   const userRes = await fetch(`/api/users?userId=${userId}`);
-        //   const users = await userRes.json();
-        //   const user = users[0]; // 배열이라서
-        const userRes = await axios.get('/api/users/1');
-        const user = userRes.data;
+        const userId = localStorage.getItem('userId');
+        const userRes = await fetch(`/api/users/${userId}`);
+        const user = await userRes.json(); // ✅ 여기선 객체 하나
 
-        // 기존 거래목록에서 해당 transactionId를 수정
-        const updatedTransactions = user.transactions.map((t) =>
+        const updatedTransactions = (user.transactions || []).map((t) =>
           t.transactionId === updatedTransaction.transactionId
             ? { ...t, ...updatedTransaction }
             : t
         );
 
-        // PATCH 요청으로 수정된 거래목록을 서버에 반영
         await fetch(`/api/users/${user.id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ transactions: updatedTransactions }),
         });
 
-        // 로컬 상태도 반영
         this.transactions = updatedTransactions;
       } catch (err) {
         console.error('거래 수정 실패:', err);
         throw err;
       }
     },
+
     async deleteTransaction(transactionId) {
       try {
-        const userRes = await axios.get('/api/users/1');
-        const user = userRes.data;
+        const userId = localStorage.getItem('userId');
+
+        // 🔥 user 하나만 가져오는 요청
+        const userRes = await fetch(`/api/users/${userId}`);
+        const user = await userRes.json(); // ✅ 배열 아님!
 
         const updatedTransactions = user.transactions.filter(
           (t) => t.transactionId !== transactionId

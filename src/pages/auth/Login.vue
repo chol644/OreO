@@ -108,17 +108,20 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed } from "vue";
+import { ref, reactive, computed, nextTick } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios'; // Import axios
+import { useAuthStore } from '../../stores/auth';
+
+const authStore = useAuthStore();
 
 // --- Router Instance ---
 const router = useRouter();
 
 // --- Reactive Data ---
 const formData = reactive({
-  email: "",
-  password: "",
+  email: '',
+  password: '',
 });
 
 const showPassword = ref(false);
@@ -127,7 +130,7 @@ const isLoading = ref(false);
 
 // --- Computed Properties ---
 const passwordFieldType = computed(() => {
-  return showPassword.value ? "text" : "password";
+  return showPassword.value ? 'text' : 'password';
 });
 
 // --- Methods ---
@@ -138,7 +141,7 @@ const togglePasswordVisibility = () => {
 const handleLogin = async () => {
   loginError.value = null;
   isLoading.value = true;
-  console.log("Login attempt (axios):", formData.email);
+  console.log('Login attempt (axios):', formData.email);
 
   // --- IMPORTANT SECURITY WARNING ---
   // Sending passwords in plain text like this is highly insecure for real applications.
@@ -149,58 +152,69 @@ const handleLogin = async () => {
     // Base URL for your json-server
     // Assumes db.json is served at the root
     const apiUrl = '/api/users';
-
     // Use axios.get with a `params` object for query parameters
     const response = await axios.get(apiUrl, {
       params: {
         email: formData.email,
-        password: formData.password
+        password: formData.password,
         // Note: json-server will filter the array based on these params
-      }
+      },
     });
 
     // axios automatically parses JSON, data is in `response.data`
     const matchingUsers = response.data;
 
     // Check if exactly one user matched
-    if (matchingUsers && matchingUsers.length === 1) {
-      console.log("Login successful:", matchingUsers[0]);
-      // --- Login Success ---
-      // Optionally store user data (e.g., in Pinia/Vuex or localStorage)
-      localStorage.setItem('userData', JSON.stringify(matchingUsers[0])); // Example
-      // alert('로그인 성공!');
-      router.push('/'); // Redirect
-    } else {
-      // Login failed (no match or potential data issue)
-      console.log("Login failed: Invalid email or password");
-      loginError.value = "이메일 또는 비밀번호가 일치하지 않습니다.";
+    if (Array.isArray(matchingUsers) && matchingUsers.length === 1) {
+      const user = matchingUsers[0];
+
+      // 이메일과 비밀번호 완전 일치 확인
+      if (
+        user.email === formData.email.trim() &&
+        user.password === formData.password
+      ) {
+        localStorage.setItem('userId', user.id);
+
+        authStore.setUser(user);
+        alert('로그인 성공!');
+        router.push('/');
+        return;
+      }
     }
+
+    // 일치하지 않으면 아래 실행
+    loginError.value = '이메일 또는 비밀번호가 일치하지 않습니다.';
   } catch (error) {
     // axios throws errors for non-2xx status codes (unlike fetch)
-    console.error("Login error:", error);
+    console.error('Login error:', error);
     if (error.response) {
       // The request was made and the server responded with a status code
       // that falls out of the range of 2xx
-      console.error("Error data:", error.response.data);
-      console.error("Error status:", error.response.status);
+      console.error('Error data:', error.response.data);
+      console.error('Error status:', error.response.status);
       loginError.value = `로그인 오류가 발생했습니다 (상태: ${error.response.status}).`;
     } else if (error.request) {
       // The request was made but no response was received
-      console.error("Error request:", error.request);
-      loginError.value = "서버에 연결할 수 없습니다. 네트워크를 확인하거나 서버가 실행 중인지 확인하세요.";
+      console.error('Error request:', error.request);
+      loginError.value =
+        '서버에 연결할 수 없습니다. 네트워크를 확인하거나 서버가 실행 중인지 확인하세요.';
     } else {
       // Something happened in setting up the request that triggered an Error
       console.error('Error message:', error.message);
-      loginError.value = "로그인 요청 중 오류가 발생했습니다.";
+      loginError.value = '로그인 요청 중 오류가 발생했습니다.';
     }
   } finally {
-      isLoading.value = false; // Reset loading state
+    isLoading.value = false; // Reset loading state
   }
 };
 
 // --- Other Methods (unchanged) ---
-const goToSignup = () => { router.push("/signup"); };
-const forgotPassword = () => { alert("Forgot password clicked (Not implemented)"); };
+const goToSignup = () => {
+  router.push('/signup');
+};
+const forgotPassword = () => {
+  alert('Forgot password clicked (Not implemented)');
+};
 </script>
 
 <!-- Keep the existing style block -->

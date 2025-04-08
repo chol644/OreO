@@ -59,6 +59,8 @@ import AddTransactionForm from '@/components/transactions/AddTransactionForm.vue
 import { useTransactionStore } from '@/stores/transaction';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
+import { useAuthStore } from '../../stores/auth';
+import { useRouter } from 'vue-router';
 
 export default defineComponent({
   name: 'CalendarPage',
@@ -67,6 +69,10 @@ export default defineComponent({
     TransactionsList,
     AddTransactionForm,
   },
+  setup() {
+    const router = useRouter();
+    return { router };
+  },
   data() {
     return {
       today: new Date(),
@@ -74,6 +80,9 @@ export default defineComponent({
     };
   },
   computed: {
+    authStore() {
+      return useAuthStore();
+    },
     transactionsStore() {
       return useTransactionStore();
     },
@@ -112,14 +121,23 @@ export default defineComponent({
       return formatted;
     },
     openTransactionForm() {
-      this.showAddTransactionModal = true;
+      if (!this.authStore.isLoggedIn) {
+        this.$router.push('/login');
+      } else {
+        this.showAddTransactionModal = true;
+      }
     },
+
     closeTransactionForm() {
       this.showAddTransactionModal = false;
     },
   },
   mounted() {
-    this.transactionsStore.fetchTransactions(); // 항상 DB에서 fetch!
+    if (!this.authStore.isLoggedIn) {
+      this.$router.push('/login');
+    } else {
+      this.transactionsStore.fetchTransactions();
+    }
   },
 });
 </script>
