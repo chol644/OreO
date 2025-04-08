@@ -1,15 +1,15 @@
 <template>
   <div class="d-flex justify-content-center align-items-center mt-5">
-    <button @click="prevMonth" class="px-3 py-1 bg-gray-200 rounded">
-      &lt;
+    <button class="btn btn-sm btn-outline-secondary" @click="prevMonth">
+      <i class="bi bi-chevron-left"></i>
     </button>
 
     <span class="mx-3 text-xl font-semibold">
       {{ currentYear }}년 {{ currentMonth }}월
     </span>
 
-    <button @click="nextMonth" class="px-3 py-1 bg-gray-200 rounded">
-      &gt;
+    <button class="btn btn-sm btn-outline-secondary" @click="nextMonth">
+      <i class="bi bi-chevron-right"></i>
     </button>
   </div>
 
@@ -71,6 +71,9 @@ import {
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import DoughnutChart from '@/pages/ChartVIew/components/DoughnutChart.vue';
 import LineChart from '@/pages/ChartVIew/components/LineChart.vue';
+import { useAuthStore } from '@/stores/auth';
+
+const authStore = useAuthStore();
 
 ChartJS.register(
   ArcElement,
@@ -125,10 +128,6 @@ const optionText = computed(
 const isSameMonth = (dateStr, year, month) => {
   const date = new Date(dateStr);
   return date.getFullYear() === year && date.getMonth() + 1 === month;
-};
-
-const isCurrentMonth = (dateStr) => {
-  return isSameMonth(dateStr, currentYear.value, currentMonth.value);
 };
 
 const getLast3Months = () => {
@@ -344,7 +343,13 @@ const loadData = async () => {
   isLoaded.value = false;
   chartData.value = { labels: [], datasets: [] };
 
-  const response = await fetch('/api/users/1');
+  const userId = authStore.user?.id;
+  if (!userId) {
+    console.error('로그인 사용자 불러오기 실패');
+    return;
+  }
+
+  const response = await fetch(`/api/users/${userId}`);
   const data = await response.json();
   const transactions = data.transactions;
 

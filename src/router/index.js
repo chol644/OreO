@@ -44,7 +44,7 @@ const router = createRouter({
     {
       path: '/chart',
       name: 'Chart',
-      component: () => import('@/pages/ChartView.vue'),
+      component: () => import('@/pages//ChartVIew/ChartView.vue'),
     },
     {
       path: '/:pathMatch(.*)*',
