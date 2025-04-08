@@ -130,10 +130,6 @@ const isSameMonth = (dateStr, year, month) => {
   return date.getFullYear() === year && date.getMonth() + 1 === month;
 };
 
-const isCurrentMonth = (dateStr) => {
-  return isSameMonth(dateStr, currentYear.value, currentMonth.value);
-};
-
 const getLast3Months = () => {
   const dates = [];
   let year = currentYear.value;
@@ -349,7 +345,7 @@ const loadData = async () => {
 
   const userId = authStore.user?.id;
   if (!userId) {
-    console.error('로그인된 사용자 없음');
+    console.error('로그인 사용자 불러오기 실패');
     return;
   }
 
