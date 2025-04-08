@@ -72,8 +72,7 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 import DoughnutChart from '@/pages/ChartVIew/components/DoughnutChart.vue';
 import LineChart from '@/pages/ChartVIew/components/LineChart.vue';
 import { useAuthStore } from '@/stores/auth';
-
-const authStore = useAuthStore();
+import { useTransactionStore } from '@/stores/transaction';
 
 ChartJS.register(
   ArcElement,
@@ -86,8 +85,11 @@ ChartJS.register(
   ChartDataLabels
 );
 
+const authStore = useAuthStore();
+const transactionStore = useTransactionStore();
+
 const chartData = ref({ labels: [], datasets: [] });
-const totalAmount = ref(0); //월별 총 금액
+const totalAmount = ref(0);
 const hasData = ref(true);
 const isLoaded = ref(false);
 const selectedOption = ref('expense');
@@ -96,10 +98,10 @@ const currentDate = new Date();
 const currentYear = ref(currentDate.getFullYear());
 const currentMonth = ref(currentDate.getMonth() + 1);
 
-//지출 카테고리
 const expenseCategories = [
   '식비',
   '교통비',
+  '문화생활',
   '마트/편의점',
   '패션/미용',
   '생활용품',
@@ -111,7 +113,6 @@ const expenseCategories = [
   '부모님',
 ];
 
-//수입 카테고리
 const incomeCategories = ['월급', '부수입', '용돈', '상여', '금융소득'];
 
 const optionText = computed(
@@ -149,9 +150,9 @@ const getLast3Months = () => {
 
 const loadCategoryChartData = ({
   transactions,
-  type, // 'income' | 'expense'
+  type,
   categories,
-  isThreeMonth, // boolean: true면 3개월치, false면 현재 월
+  isThreeMonth,
   label,
 }) => {
   const totalByCategory = Object.fromEntries(categories.map((c) => [c, 0]));
@@ -179,19 +180,20 @@ const loadCategoryChartData = ({
       label,
       data: categories.map((cat) => totalByCategory[cat]),
       backgroundColor:
-        categories.length === 11
+        categories.length === 12
           ? [
               '#FF6384',
               '#36A2EB',
-              '#FFCE56',
               '#4BC0C0',
               '#9966FF',
+              '#FF3B30',
               '#FF9F40',
               '#8AC926',
               '#FF6B6B',
               '#6A4C93',
-              '#00BFA9',
+              '#00796B',
               '#FFD166',
+              '#00C49F',
             ]
           : ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
       hoverOffset: 8,
@@ -238,18 +240,17 @@ const lineChartOptions = {
   plugins: {
     tooltip: {
       callbacks: {
-        label: (tooltipItem) => {
-          return `${tooltipItem.label}: ${tooltipItem.raw.toLocaleString()}원`;
-        },
+        label: (tooltipItem) =>
+          `${tooltipItem.label}: ${tooltipItem.raw.toLocaleString()}원`,
       },
     },
     datalabels: {
-      formatter: (value, ctx) => {
-        if (value === 0) return '';
-        return `${
-          ctx.chart.data.labels[ctx.dataIndex]
-        }\n${value.toLocaleString()}원`;
-      },
+      formatter: (value, ctx) =>
+        value === 0
+          ? ''
+          : `${
+              ctx.chart.data.labels[ctx.dataIndex]
+            }\n${value.toLocaleString()}원`,
       color: '#6B7280',
       font: { weight: 'bold', size: 8 },
       align: 'top',
@@ -260,7 +261,7 @@ const lineChartOptions = {
     y: { beginAtZero: true },
   },
 };
-// 월별 지출
+
 const loadExpenseData = (transactions) => {
   loadCategoryChartData({
     transactions,
@@ -271,18 +272,6 @@ const loadExpenseData = (transactions) => {
   });
 };
 
-// 최근 3개월 지출
-const loadExpense3MData = (transactions) => {
-  loadCategoryChartData({
-    transactions,
-    type: 'expense',
-    categories: expenseCategories,
-    isThreeMonth: true,
-    label: '최근 3개월 지출',
-  });
-};
-
-// 월별 수입
 const loadIncomeData = (transactions) => {
   loadCategoryChartData({
     transactions,
@@ -293,7 +282,16 @@ const loadIncomeData = (transactions) => {
   });
 };
 
-// 최근 3개월 수입
+const loadExpense3MData = (transactions) => {
+  loadCategoryChartData({
+    transactions,
+    type: 'expense',
+    categories: expenseCategories,
+    isThreeMonth: true,
+    label: '최근 3개월 지출',
+  });
+};
+
 const loadIncome3MData = (transactions) => {
   loadCategoryChartData({
     transactions,
@@ -304,7 +302,6 @@ const loadIncome3MData = (transactions) => {
   });
 };
 
-//순이익 데이터 처리
 const loadProfitData = (transactions) => {
   const last3Months = getLast3Months();
   const labels = last3Months.map(({ year, month }) => `${year}년 ${month}월`);
@@ -312,16 +309,14 @@ const loadProfitData = (transactions) => {
   totalAmount.value = 0;
 
   last3Months.forEach(({ year, month }) => {
-    let income = 0;
-    let expense = 0;
-
+    let income = 0,
+      expense = 0;
     transactions.forEach((t) => {
       if (isSameMonth(t.date, year, month) && t.amount) {
         if (t.type === 'income') income += t.amount;
         if (t.type === 'expense') expense += t.amount;
       }
     });
-
     const profit = income - expense;
     totalAmount.value += profit;
     profits.push(profit);
@@ -339,27 +334,16 @@ const loadProfitData = (transactions) => {
   ];
 };
 
-const loadData = async () => {
+const loadData = () => {
   isLoaded.value = false;
   chartData.value = { labels: [], datasets: [] };
 
-  const userId = authStore.user?.id;
-  if (!userId) {
-    console.error('로그인 사용자 불러오기 실패');
-    return;
-  }
+  const transactions = transactionStore.transactions;
 
-  const response = await fetch(`/api/users/${userId}`);
-  const data = await response.json();
-  const transactions = data.transactions;
-
-  if (selectedOption.value === 'expense') {
-    loadExpenseData(transactions);
-  } else if (selectedOption.value === 'income') {
-    loadIncomeData(transactions);
-  } else if (selectedOption.value === 'profit') {
-    loadProfitData(transactions);
-  } else if (selectedOption.value === 'expense-3m')
+  if (selectedOption.value === 'expense') loadExpenseData(transactions);
+  else if (selectedOption.value === 'income') loadIncomeData(transactions);
+  else if (selectedOption.value === 'profit') loadProfitData(transactions);
+  else if (selectedOption.value === 'expense-3m')
     loadExpense3MData(transactions);
   else if (selectedOption.value === 'income-3m') loadIncome3MData(transactions);
 
@@ -371,17 +355,30 @@ const prevMonth = () => {
   if (currentMonth.value === 1) {
     currentYear.value--;
     currentMonth.value = 12;
-  } else currentMonth.value--;
+  } else {
+    currentMonth.value--;
+  }
 };
 
 const nextMonth = () => {
   if (currentMonth.value === 12) {
     currentYear.value++;
     currentMonth.value = 1;
-  } else currentMonth.value++;
+  } else {
+    currentMonth.value++;
+  }
 };
+
+onMounted(() => {
+  transactionStore.fetchTransactions();
+  loadData();
+});
 
 watch([currentMonth, currentYear, selectedOption], loadData);
 
-onMounted(loadData);
+watch(
+  () => transactionStore.transactions,
+  () => loadData(),
+  { deep: true }
+);
 </script>
