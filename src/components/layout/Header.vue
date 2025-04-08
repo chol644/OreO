@@ -34,4 +34,8 @@ export default {
 .logo {
   margin-right: 40px;
 }
+.logo-img {
+  height: 300px; /* 로고 크기를 키우기 */
+  width: auto; /* 비율 유지 */
+}
 </style>

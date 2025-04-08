@@ -1,3 +1,38 @@
 {
-  "users": []
+  "users": [
+    {
+      "id": "cf2a",
+      "email": "nir@naver.com",
+      "password": "1234",
+      "nickname": "예린",
+      "transactions": [
+        {
+          "type": "expense",
+          "amount": 1234,
+          "category": "교통비",
+          "asset": "카드",
+          "memo": "",
+          "date": "2025-04-08T06:00:02.349Z",
+          "transactionId": 101
+        }
+      ]
+    },
+    {
+      "id": "5a0c",
+      "email": "nir2y@naver.com",
+      "password": "1234",
+      "nickname": "예린",
+      "transactions": [
+        {
+          "type": "expense",
+          "amount": 1234,
+          "category": "문화생활",
+          "asset": "카드",
+          "memo": "",
+          "date": "2025-04-08T06:07:01.168Z",
+          "transactionId": 101
+        }
+      ]
+    }
+  ]
 }
