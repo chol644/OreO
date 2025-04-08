@@ -40,7 +40,7 @@ import {
   isSameDay,
 } from 'date-fns';
 import { ko } from 'date-fns/locale';
-import { useTransactionStore } from '@/store/transaction';
+import { useTransactionStore } from '@/stores/transaction';
 
 export default defineComponent({
   name: 'CalendarView',

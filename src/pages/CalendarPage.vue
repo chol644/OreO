@@ -56,7 +56,7 @@ import { defineComponent, onMounted } from 'vue';
 import CalendarView from '@/components/calendar/CalendarView.vue';
 import TransactionsList from '@/components/dashboard/TransactionsList.vue';
 import AddTransactionForm from '@/components/transactions/AddTransactionForm.vue';
-import { useTransactionStore } from '@/store/transaction';
+import { useTransactionStore } from '@/stores/transaction';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 

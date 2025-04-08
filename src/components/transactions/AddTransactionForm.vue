@@ -58,7 +58,7 @@
 <script>
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
-import { useTransactionStore } from '@/store/transaction';
+import { useTransactionStore } from '@/stores/transaction';
 import { storeToRefs } from 'pinia';
 import {
   incomeCategoryMap,

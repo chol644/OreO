@@ -11,7 +11,7 @@
 
 <script>
 import { defineComponent } from 'vue';
-import { useTransactionStore } from '@/store/transaction';
+import { useTransactionStore } from '@/stores/transaction';
 
 export default defineComponent({
   name: 'DeleteTransactionForm',
