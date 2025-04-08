@@ -20,7 +20,7 @@
     </div>
     <div class="row">
       <!-- 캘린더 섹션 -->
-      <div class="col-md-8">
+      <div class="col-md-7">
         <div class="card">
           <div class="card-body">
             <CalendarView />
@@ -28,13 +28,16 @@
         </div>
       </div>
       <!-- 오늘 거래 섹션 -->
-      <div class="col-md-4">
+      <div class="col-md-5">
         <div class="card">
           <div
             class="card-header d-flex justify-content-between align-items-center"
           >
             <h5 class="mb-0">{{ selectedDateFormatted }}</h5>
-            <button class="btn btn-primary btn-sm" @click="openTransactionForm">
+            <button
+              class="btn btn-primary btn-sm no-wrap"
+              @click="openTransactionForm"
+            >
               <i class="bi bi-plus"></i> 추가
             </button>
           </div>
@@ -146,6 +149,24 @@ export default defineComponent({
   padding: 20px 0;
 }
 
+.row {
+  display: flex;
+  flex-wrap: wrap; /* 화면 크기에 따라 요소들이 아래로 내려갈 수 있도록 설정 */
+  gap: 20px; /* 요소 간의 간격 */
+  transition: all 0.3s ease-in-out; /* 부드럽게 크기가 변하도록 추가 */
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px; /* 여백 조정 */
+  border-bottom: 1px solid #ddd; /* 하단 경계선 추가 */
+}
+.calendar-page {
+  padding: 20px 0;
+}
+
 .summary-cards {
   background: #f9fafb;
   border-radius: 8px;
@@ -157,16 +178,24 @@ export default defineComponent({
   border: none;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
-
-.card-body {
+.summary-card .card-body {
   display: flex;
-  padding: 20px;
+  justify-content: space-between; /* 항목 사이에 일정한 간격을 두기 */
+  padding: 10px 15px; /* 여백 추가 */
+}
+/* .card-body {
+  display: flex;
+  margin: 0;
+  padding: 0;
+} */
+.no-wrap {
+  white-space: nowrap; /* 줄바꿈 방지 */
 }
 
 .summary-item {
   flex: 1;
   text-align: center;
-  padding: 0 15px;
+  padding: 10 15px;
 }
 
 .summary-item h6 {
@@ -198,5 +227,33 @@ export default defineComponent({
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   background: #fff;
   margin-bottom: 20px;
+  /* justify-content: space-between; */
+}
+.col-md-7,
+.col-md-5 {
+  display: flex;
+  flex-direction: column; /* 칼럼으로 설정하여 세로로 정렬 */
+  flex: 1; /* 기본적으로 공간을 나누어 가짐 */
+  transition: max-width 0.3s ease-in-out; /* 부드럽게 크기가 변하도록 추가 */
+  width: 100%;
+}
+
+.col-md-7 {
+  max-width: 70%;
+}
+
+.col-md-5 {
+  max-width: 30%;
+}
+
+@media (max-width: 992px) {
+  /* 화면 크기가 992px 이하일 때 */
+  .col-md-7,
+  .col-md-5 {
+    max-width: 100%; /* 각 섹션이 100% 너비를 차지하도록 설정 */
+  }
+  .row {
+    flex-direction: column; /* row를 column으로 변경해서 아래로 내려가게 설정 */
+  }
 }
 </style>
