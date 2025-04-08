@@ -174,9 +174,10 @@ const handleLogin = async () => {
         user.password === formData.password
       ) {
         localStorage.setItem('userId', user.id);
-
+        localStorage.setItem('userNickname', user.nickname);
+        localStorage.setItem('userEmail', user.email);
         authStore.setUser(user);
-        alert('로그인 성공!');
+        // alert('로그인 성공!');
         router.push('/');
         return;
       }

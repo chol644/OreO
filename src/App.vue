@@ -1,11 +1,13 @@
 <template>
   <div class="app-container">
-    <Header />
+    <!-- 로그인 또는 회원가입 페이지가 아닐 경우에만 Header를 표시 -->
+    <Header v-if="!isAuthPage" />
     <main class="main-content">
       <router-view />
     </main>
   </div>
 </template>
+
 <script>
 import Header from './components/layout/Header.vue';
 
@@ -14,8 +16,15 @@ export default {
   components: {
     Header,
   },
+  computed: {
+    // 현재 경로가 로그인(/login) 또는 회원가입(/signup) 페이지인지 확인
+    isAuthPage() {
+      return this.$route.path === '/login' || this.$route.path === '/signup';
+    },
+  },
 };
 </script>
+
 <style>
 body {
   margin: 0;
