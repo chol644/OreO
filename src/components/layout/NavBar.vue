@@ -46,7 +46,7 @@ export default {
       navLinks: [
         { name: '달력', path: '/' },
         { name: '내역', path: '/transactions' },
-        { name: '차트', path: '/reports' },
+        { name: '차트', path: '/chart' },
       ],
       showMenu: false, // 메뉴 토글 상태
       userNickname: '', // 사용자 닉네임

@@ -37,6 +37,11 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
+      path: '/chart',
+      name: 'Chart',
+      component: () => import('@/pages/ChartView.vue'),
+    },
+    {
       path: '/:pathMatch(.*)*',
       name: 'NotFound',
       component: () => import('@/pages/NotFound.vue'),
