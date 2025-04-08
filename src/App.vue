@@ -1,3 +1,18 @@
+<script setup>
+// import HelloWorld from './components/HelloWorld.vue';
+// import TheWelcome from './components/TheWelcome.vue';
+import Header from './components/layout/Header.vue'; // Adjust the path
+</script>
+
+<!-- <template>
+  <div class="container">
+     <Header></Header>
+    <div class="card card-body border-0 pt-0">
+      <div class="border-0">
+        <router-view></router-view>
+         default
+      </div>
+    </div> -->
 <template>
   <div class="app-container">
     <!-- 로그인 또는 회원가입 페이지가 아닐 경우에만 Header를 표시 -->

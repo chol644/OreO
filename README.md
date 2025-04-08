@@ -1,29 +1,62 @@
-# money-check
+# MoneyCheck
 
-This template should help get you started developing with Vue 3 in Vite.
+## ✨ 프로젝트 소개
+**🏷️ 프로젝트 명 : MoneyCheck**
 
-## Recommended IDE Setup
+**🗓️ 프로젝트 기간** : 2025.04.07 ~ 2025.04.11
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+---
 
-## Customize configuration
+### ⭐️ 기획 배경
+현대인들은 매일 다양한 소비를 하며 지출 내역을 관리하는 데 어려움을 겪고 있습니다. 특히, 어디에 얼마나 지출했는지, 수입과 지출의 균형을 맞추는 데 어려움이 많습니다. 이를 해결하기 위해 **MoneyCheck**는 사용자들이 자신의 수입과 지출을 쉽고 효율적으로 기록하고 관리할 수 있도록 돕는 가계부 웹서비스를 개발했습니다. 수입과 지출 내역을 차트로 시각화하여, 어느 항목에 돈을 많이 썼는지 한눈에 확인할 수 있습니다. 또한, 다양한 필터링과 검색 기능을 제공하여 사용자가 원하는 데이터를 손쉽게 찾을 수 있도록 합니다.
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+---
 
-## Project Setup
+### 🐣 서비스 소개
+**MoneyCheck**는 다음과 같은 주요 기능을 제공합니다:
 
-```sh
-npm install
-```
+1. **지출/수입 기록**  
+   사용자는 자신의 지출 및 수입 내역을 기록할 수 있습니다. 각 내역에는 카테고리, 날짜, 금액 등을 입력하여 체계적으로 관리할 수 있습니다.
 
-### Compile and Hot-Reload for Development
+2. **차트 시각화**  
+   기록된 지출 내역을 바탕으로 시각적인 차트를 제공하여, 사용자가 어느 항목에 돈을 많이 썼는지 한눈에 확인할 수 있습니다. 원차트를 통해 지출 패턴을 분석할 수 있습니다.
 
-```sh
-npm run dev
-```
+3. **검색 및 필터링 기능**  
+   사용자는 원하는 기간, 카테고리 등을 기반으로 수입/지출 내역을 검색하고 필터링할 수 있습니다. 이를 통해 효율적인 데이터 분석이 가능합니다.
 
-### Compile and Minify for Production
+4. **로그인 및 사용자 관리**  
+   사용자는 로그인하여 개인화된 가계부를 관리할 수 있습니다. 로그인 시 저장된 데이터를 불러오고, 로그아웃 후 데이터가 유지됩니다.
 
-```sh
-npm run build
-```
+5. **반응형 디자인**  
+   다양한 디바이스에서 최적화된 화면을 제공하여 모바일에서도 편리하게 사용할 수 있습니다.
+
+---
+
+### 👥 서비스 대상
+- **가계부 관리가 필요한 개인 사용자**: 자신의 소비 패턴을 분석하고, 예산을 관리하고 싶은 사용자.
+- **가계부 기록을 시각적으로 보고 싶은 사용자**: 금액의 흐름을 차트나 그래프 형식으로 보고 싶은 사용자.
+
+---
+
+
+## Team Members
+
+| chol644 | Yerin Shin | goldsergeant | HyoSang Byun |
+|:-------:|:----------:|:------------:|:------------:|
+| <img src="https://avatars.githubusercontent.com/u/46176886?v=4" width="120"> | <img src="https://avatars.githubusercontent.com/u/91180366?v=4" width="120"> | <img src="https://avatars.githubusercontent.com/u/94740533?v=4" width="120"> | <img src="https://avatars.githubusercontent.com/u/48824656?v=4" width="120"> |
+| [@chol644](https://github.com/chol644) | [@nyeroni](https://github.com/nyeroni) | [@goldsergeant](https://github.com/goldsergeant) | [@HyoSangByun](https://github.com/HyoSangByun) |
+
+--- 
+## ⚙️ 기술 스택
+- **Frontend**: Vue.js, Vue Router
+- **상태 관리**: Pinia
+- **UI 프레임워크**: Bootstrap
+- **API 통신**: Axios
+- **날짜 처리**: date-fns
+
+### 💡 주요 기능
+
+1. **수입/지출 기록**: 사용자가 날짜, 카테고리, 금액 등을 입력하여 지출과 수입 내역을 기록합니다.
+2. **차트 시각화**: 기록된 내역을 차트 형태로 시각화하여, 각 항목에 얼마를 지출했는지 확인할 수 있습니다.
+3. **검색 및 필터링**: 사용자는 기간, 카테고리 등 다양한 조건을 설정하여 데이터를 쉽게 검색하고 필터링할 수 있습니다.
+4. **반응형 UI**: 모바일과 데스크탑에서 모두 원활히 사용할 수 있도록 반응형 UI를 제공하여, 사용자의 편의성을 높였습니다.

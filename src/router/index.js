@@ -37,6 +37,11 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
+      path: '/report',
+      name: 'Report',
+      component: () => import('@/pages/Report.vue'),
+    },
+    {
       path: '/chart',
       name: 'Chart',
       component: () => import('@/pages//ChartVIew/ChartView.vue'),
