@@ -100,12 +100,16 @@ const expenseCategories = [
   '마트/편의점',
   '패션/미용',
   '생활용품',
-  '문화생활',
-  '기타',
+  '공과금/주거',
+  '통신비',
+  '건강',
+  '교육',
+  '경조사/회비',
+  '부모님',
 ];
 
 //수입 카테고리
-const incomeCategories = ['월급', '부수입', '용돈', '기타'];
+const incomeCategories = ['월급', '부수입', '용돈', '상여', '금융소득'];
 
 const optionText = computed(
   () =>
@@ -142,6 +146,58 @@ const getLast3Months = () => {
     }
   }
   return dates;
+};
+
+const loadCategoryChartData = ({
+  transactions,
+  type, // 'income' | 'expense'
+  categories,
+  isThreeMonth, // boolean: true면 3개월치, false면 현재 월
+  label,
+}) => {
+  const totalByCategory = Object.fromEntries(categories.map((c) => [c, 0]));
+  totalAmount.value = 0;
+
+  const targetDates = isThreeMonth
+    ? getLast3Months()
+    : [{ year: currentYear.value, month: currentMonth.value }];
+
+  targetDates.forEach(({ year, month }) => {
+    transactions.forEach((t) => {
+      if (t.type === type && isSameMonth(t.date, year, month) && t.amount) {
+        const category = t.category.trim();
+        if (totalByCategory.hasOwnProperty(category)) {
+          totalByCategory[category] += t.amount;
+          totalAmount.value += t.amount;
+        }
+      }
+    });
+  });
+
+  chartData.value.labels = categories;
+  chartData.value.datasets = [
+    {
+      label,
+      data: categories.map((cat) => totalByCategory[cat]),
+      backgroundColor:
+        categories.length === 11
+          ? [
+              '#FF6384',
+              '#36A2EB',
+              '#FFCE56',
+              '#4BC0C0',
+              '#9966FF',
+              '#FF9F40',
+              '#8AC926',
+              '#FF6B6B',
+              '#6A4C93',
+              '#00BFA9',
+              '#FFD166',
+            ]
+          : ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
+      hoverOffset: 8,
+    },
+  ];
 };
 
 const donutChartOptions = {
@@ -205,127 +261,48 @@ const lineChartOptions = {
     y: { beginAtZero: true },
   },
 };
-
-//월별 지출 데이터 처리
+// 월별 지출
 const loadExpenseData = (transactions) => {
-  const monthlyTotal = Object.fromEntries(expenseCategories.map((c) => [c, 0]));
-  totalAmount.value = 0;
-
-  transactions.forEach((t) => {
-    if (t.type === 'expense' && isCurrentMonth(t.date) && t.amount) {
-      monthlyTotal[t.category.trim()] += t.amount;
-      totalAmount.value += t.amount;
-    }
+  loadCategoryChartData({
+    transactions,
+    type: 'expense',
+    categories: expenseCategories,
+    isThreeMonth: false,
+    label: `${currentYear.value}년 ${currentMonth.value}월 지출`,
   });
-
-  chartData.value.labels = expenseCategories;
-  chartData.value.datasets = [
-    {
-      label: `${currentYear.value}년 ${currentMonth.value}월 지출`,
-      data: expenseCategories.map((cat) => monthlyTotal[cat]),
-      backgroundColor: [
-        '#FF6384',
-        '#36A2EB',
-        '#FFCE56',
-        '#4BC0C0',
-        '#9966FF',
-        '#FF9F40',
-        '#8AC926',
-      ],
-      hoverOffset: 8,
-    },
-  ];
 };
 
-//최근 3개월 지출출
+// 최근 3개월 지출
 const loadExpense3MData = (transactions) => {
-  const last3Months = getLast3Months();
-  const totalByCategory = Object.fromEntries(
-    expenseCategories.map((c) => [c, 0])
-  );
-  totalAmount.value = 0;
-
-  last3Months.forEach(({ year, month }) => {
-    transactions.forEach((t) => {
-      if (
-        t.type === 'expense' &&
-        isSameMonth(t.date, year, month) &&
-        t.amount
-      ) {
-        totalByCategory[t.category.trim()] += t.amount;
-        totalAmount.value += t.amount;
-      }
-    });
+  loadCategoryChartData({
+    transactions,
+    type: 'expense',
+    categories: expenseCategories,
+    isThreeMonth: true,
+    label: '최근 3개월 지출',
   });
-
-  chartData.value.labels = expenseCategories;
-  chartData.value.datasets = [
-    {
-      label: '최근 3개월 지출',
-      data: expenseCategories.map((cat) => totalByCategory[cat]),
-      backgroundColor: [
-        '#FF6384',
-        '#36A2EB',
-        '#FFCE56',
-        '#4BC0C0',
-        '#9966FF',
-        '#FF9F40',
-        '#8AC926',
-      ],
-      hoverOffset: 8,
-    },
-  ];
 };
 
-//월별 수입 데이터 처리
+// 월별 수입
 const loadIncomeData = (transactions) => {
-  const monthlyTotal = Object.fromEntries(incomeCategories.map((c) => [c, 0]));
-  totalAmount.value = 0;
-
-  transactions.forEach((t) => {
-    if (t.type === 'income' && isCurrentMonth(t.date) && t.amount) {
-      monthlyTotal[t.category.trim()] += t.amount;
-      totalAmount.value += t.amount;
-    }
+  loadCategoryChartData({
+    transactions,
+    type: 'income',
+    categories: incomeCategories,
+    isThreeMonth: false,
+    label: `${currentYear.value}년 ${currentMonth.value}월 수입`,
   });
-
-  chartData.value.labels = incomeCategories;
-  chartData.value.datasets = [
-    {
-      label: `${currentYear.value}년 ${currentMonth.value}월 수입`,
-      data: incomeCategories.map((cat) => monthlyTotal[cat]),
-      backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0'],
-      hoverOffset: 8,
-    },
-  ];
 };
 
-//최근 3개월 수입 데이터 처리
+// 최근 3개월 수입
 const loadIncome3MData = (transactions) => {
-  const last3Months = getLast3Months();
-  const totalByCategory = Object.fromEntries(
-    incomeCategories.map((c) => [c, 0])
-  );
-  totalAmount.value = 0;
-
-  last3Months.forEach(({ year, month }) => {
-    transactions.forEach((t) => {
-      if (t.type === 'income' && isSameMonth(t.date, year, month) && t.amount) {
-        totalByCategory[t.category.trim()] += t.amount;
-        totalAmount.value += t.amount;
-      }
-    });
+  loadCategoryChartData({
+    transactions,
+    type: 'income',
+    categories: incomeCategories,
+    isThreeMonth: true,
+    label: '최근 3개월 수입',
   });
-
-  chartData.value.labels = incomeCategories;
-  chartData.value.datasets = [
-    {
-      label: '최근 3개월 수입',
-      data: incomeCategories.map((cat) => totalByCategory[cat]),
-      backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0'],
-      hoverOffset: 8,
-    },
-  ];
 };
 
 //순이익 데이터 처리
