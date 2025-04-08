@@ -35,7 +35,9 @@
       <component
         :is="selectedOption === 'profit' ? LineChart : DoughnutChart"
         :chart-data="chartData"
-        :chart-options="chartOptions"
+        :chart-options="
+          selectedOption === 'profit' ? lineChartOptions : donutChartOptions
+        "
       />
     </div>
     <div class="mt-10 text-center">
@@ -142,41 +144,63 @@ const getLast3Months = () => {
   return dates;
 };
 
-const chartOptions = ref({
+const donutChartOptions = {
   plugins: {
     tooltip: {
-      //커서 올릴 시 뜨는 설명
       callbacks: {
         label: (tooltipItem) => {
-          // const dataset =
-          //   tooltipItem.chart.data.datasets[tooltipItem.datasetIndex];
-          // const total = dataset.data.reduce((acc, value) => acc + value, 0);
-          // const currentValue = dataset.data[tooltipItem.dataIndex];
-          // const percentage = ((currentValue / total) * 100).toFixed(2);
-          // return `${tooltipItem.label}: ${percentage}%`;
           const dataset =
             tooltipItem.chart.data.datasets[tooltipItem.datasetIndex];
+          const total = dataset.data.reduce((acc, value) => acc + value, 0);
           const currentValue = dataset.data[tooltipItem.dataIndex];
-          return `${tooltipItem.label}: ${currentValue.toLocaleString()}원`;
+          const percentage = ((currentValue / total) * 100).toFixed(2);
+          return `${tooltipItem.label}: ${percentage}%`;
         },
       },
     },
     datalabels: {
-      // 차트 위에 보여지는 글자(퍼센트)
       formatter: (value, ctx) => {
         const dataset = ctx.chart.data.datasets[0];
         const total = dataset.data.reduce((acc, val) => acc + val, 0);
         const percentage = ((value / total) * 100).toFixed(1);
-        if (percentage === '0.0') return '';
-        return `${ctx.chart.data.labels[ctx.dataIndex]}\n${percentage}%`;
+        return percentage === '0.0'
+          ? ''
+          : `${ctx.chart.data.labels[ctx.dataIndex]}\n${percentage}%`;
       },
       color: '#6B7280',
-      font: { weight: 'bold', size: 14 },
+      font: { weight: 'bold', size: 13 },
     },
-    // 항목 이름 목록
     legend: { position: 'bottom' },
   },
-});
+};
+
+const lineChartOptions = {
+  responsive: true,
+  plugins: {
+    tooltip: {
+      callbacks: {
+        label: (tooltipItem) => {
+          return `${tooltipItem.label}: ${tooltipItem.raw.toLocaleString()}원`;
+        },
+      },
+    },
+    datalabels: {
+      formatter: (value, ctx) => {
+        if (value === 0) return '';
+        return `${
+          ctx.chart.data.labels[ctx.dataIndex]
+        }\n${value.toLocaleString()}원`;
+      },
+      color: '#6B7280',
+      font: { weight: 'bold', size: 8 },
+      align: 'top',
+    },
+    legend: { position: 'bottom' },
+  },
+  scales: {
+    y: { beginAtZero: true },
+  },
+};
 
 //월별 지출 데이터 처리
 const loadExpenseData = (transactions) => {
