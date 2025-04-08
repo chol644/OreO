@@ -60,6 +60,15 @@
           "memo": "₩13₩",
           "date": "2025-04-07T08:27:54.347Z",
           "transactionId": 106
+        },
+        {
+          "type": "expense",
+          "amount": 10000000,
+          "category": "마트/편의점",
+          "asset": "카드",
+          "memo": "CU편의점",
+          "date": "2025-04-07",
+          "transactionId": 107
         }
       ]
     }
