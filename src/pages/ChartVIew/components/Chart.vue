@@ -145,16 +145,19 @@ const getLast3Months = () => {
 };
 
 const donutChartOptions = {
+  responsive: true,
+  maintainAspectRatio: false,
   plugins: {
     tooltip: {
       callbacks: {
         label: (tooltipItem) => {
-          const dataset =
-            tooltipItem.chart.data.datasets[tooltipItem.datasetIndex];
+          const dataset = tooltipItem.dataset;
           const total = dataset.data.reduce((acc, value) => acc + value, 0);
           const currentValue = dataset.data[tooltipItem.dataIndex];
           const percentage = ((currentValue / total) * 100).toFixed(2);
-          return `${tooltipItem.label}: ${percentage}%`;
+          return `${
+            tooltipItem.label
+          }: ${currentValue.toLocaleString()}원 (${percentage}%)`;
         },
       },
     },
@@ -176,6 +179,7 @@ const donutChartOptions = {
 
 const lineChartOptions = {
   responsive: true,
+  maintainAspectRatio: false,
   plugins: {
     tooltip: {
       callbacks: {
