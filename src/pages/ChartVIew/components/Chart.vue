@@ -1,15 +1,15 @@
 <template>
   <div class="d-flex justify-content-center align-items-center mt-5">
-    <button @click="prevMonth" class="px-3 py-1 bg-gray-200 rounded">
-      &lt;
+    <button class="btn btn-sm btn-outline-secondary" @click="prevMonth">
+      <i class="bi bi-chevron-left"></i>
     </button>
 
     <span class="mx-3 text-xl font-semibold">
       {{ currentYear }}년 {{ currentMonth }}월
     </span>
 
-    <button @click="nextMonth" class="px-3 py-1 bg-gray-200 rounded">
-      &gt;
+    <button class="btn btn-sm btn-outline-secondary" @click="nextMonth">
+      <i class="bi bi-chevron-right"></i>
     </button>
   </div>
 
