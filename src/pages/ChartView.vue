@@ -1,14 +1,11 @@
 <template>
   <!-- 전체 컨테이너를 감싸는 div -->
   <div class="container">
-    <Nav />
-
     <Chart />
   </div>
 </template>
 
 <script setup>
-import Nav from '@/pages/ChartVIew/components/Nav.vue';
 import Chart from '@/pages/ChartVIew/components/Chart.vue';
 
 // import Loading from '@/components/Loading.vue';
