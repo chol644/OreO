@@ -3,9 +3,12 @@
     class="login-container d-flex justify-content-center align-items-center bg-light"
   >
     <div class="login-form p-4 p-md-5 border rounded bg-white shadow-sm">
-      <!-- Optional: Sub-heading like the original -->
-      <!-- <p class="text-muted text-center text-uppercase small mb-2">WELCOME BACK</p> -->
       <h1 class="h3 mb-4 fw-normal text-center">로그인</h1>
+
+      <!-- Error Message Display -->
+      <div v-if="loginError" class="alert alert-danger p-2" role="alert">
+        {{ loginError }}
+      </div>
 
       <form @submit.prevent="handleLogin">
         <!-- Email Input -->
@@ -17,6 +20,7 @@
             placeholder="name@example.com"
             v-model="formData.email"
             required
+            :disabled="isLoading"
           />
           <label for="floatingInput">이메일</label>
         </div>
@@ -30,6 +34,7 @@
             placeholder="Password"
             v-model="formData.password"
             required
+            :disabled="isLoading"
           />
           <label for="floatingPassword">비밀번호</label>
           <button
@@ -37,10 +42,9 @@
             @click="togglePasswordVisibility"
             class="btn btn-link position-absolute top-50 end-0 translate-middle-y me-2 border-0"
             aria-label="Toggle password visibility"
+            :disabled="isLoading"
           >
-            <!-- Using Bootstrap Icons (ensure you have them linked) -->
             <i :class="showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
-            <!-- Or use text: {{ showPassword ? 'Hide' : 'Show' }} -->
           </button>
         </div>
 
@@ -52,6 +56,7 @@
               type="checkbox"
               value=""
               id="rememberMe"
+              :disabled="isLoading"
             />
             <label class="form-check-label small" for="rememberMe">
               로그인 기억하기
@@ -66,8 +71,18 @@
         </div>
 
         <!-- Submit Button -->
-        <button class="w-100 btn btn-lg btn-primary mb-3" type="submit">
-          로그인
+        <button
+          class="w-100 btn btn-lg btn-primary mb-3"
+          type="submit"
+          :disabled="isLoading"
+        >
+          <span
+            v-if="isLoading"
+            class="spinner-border spinner-border-sm"
+            role="status"
+            aria-hidden="true"
+          ></span>
+          <span v-else>로그인</span>
         </button>
       </form>
 
@@ -78,22 +93,9 @@
         <hr class="flex-grow-1" />
       </div>
 
-      <!-- Social Login Buttons -->
-      <!-- <div class="d-grid gap-2">
-          <button type="button" class="btn btn-outline-secondary d-flex align-items-center justify-content-center gap-2" @click="loginWithGoogle">
-            <i class="bi bi-google"></i> Log in with Google
-          </button>
-          <button type="button" class="btn btn-outline-secondary d-flex align-items-center justify-content-center gap-2" @click="loginWithFacebook">
-            <i class="bi bi-facebook"></i> Log in with Facebook
-          </button>
-          <button type="button" class="btn btn-outline-secondary d-flex align-items-center justify-content-center gap-2" @click="loginWithApple">
-            <i class="bi bi-apple"></i> Log in with Apple
-          </button>
-        </div> -->
-
       <!-- Signup Link -->
       <p class="mt-4 text-center text-muted small">
-        계정을 잊으셨나요?
+        계정이 없으신가요?
         <a
           href="#"
           @click.prevent="goToSignup"
@@ -106,16 +108,22 @@
 </template>
 
 <script setup>
-import router from "@/components/router";
 import { ref, reactive, computed } from "vue";
 import { useRouter } from 'vue-router';
+import axios from 'axios'; // Import axios
+
+// --- Router Instance ---
+const router = useRouter();
+
 // --- Reactive Data ---
 const formData = reactive({
-  email: "", // Start empty for login
-  password: "", // Start empty for login
+  email: "",
+  password: "",
 });
 
 const showPassword = ref(false);
+const loginError = ref(null);
+const isLoading = ref(false);
 
 // --- Computed Properties ---
 const passwordFieldType = computed(() => {
@@ -127,76 +135,97 @@ const togglePasswordVisibility = () => {
   showPassword.value = !showPassword.value;
 };
 
-const handleLogin = () => {
-  console.log("Login attempt:", formData);
-  // Add your login logic here (e.g., API call)
-  router.push('/');
-  // Handle response, redirect on success, show errors on failure
+const handleLogin = async () => {
+  loginError.value = null;
+  isLoading.value = true;
+  console.log("Login attempt (axios):", formData.email);
+
+  // --- IMPORTANT SECURITY WARNING ---
+  // Sending passwords in plain text like this is highly insecure for real applications.
+  // Use hashing server-side. This is only for local mock `json-server`.
+  // --- --- --- ---
+
+  try {
+    // Base URL for your json-server
+    // Assumes db.json is served at the root
+    const apiUrl = '/api/users';
+
+    // Use axios.get with a `params` object for query parameters
+    const response = await axios.get(apiUrl, {
+      params: {
+        email: formData.email,
+        password: formData.password
+        // Note: json-server will filter the array based on these params
+      }
+    });
+
+    // axios automatically parses JSON, data is in `response.data`
+    const matchingUsers = response.data;
+
+    // Check if exactly one user matched
+    if (matchingUsers && matchingUsers.length === 1) {
+      console.log("Login successful:", matchingUsers[0]);
+      // --- Login Success ---
+      // Optionally store user data (e.g., in Pinia/Vuex or localStorage)
+      // localStorage.setItem('userData', JSON.stringify(matchingUsers[0])); // Example
+      // alert('로그인 성공!');
+      router.push('/'); // Redirect
+    } else {
+      // Login failed (no match or potential data issue)
+      console.log("Login failed: Invalid email or password");
+      loginError.value = "이메일 또는 비밀번호가 일치하지 않습니다.";
+    }
+  } catch (error) {
+    // axios throws errors for non-2xx status codes (unlike fetch)
+    console.error("Login error:", error);
+    if (error.response) {
+      // The request was made and the server responded with a status code
+      // that falls out of the range of 2xx
+      console.error("Error data:", error.response.data);
+      console.error("Error status:", error.response.status);
+      loginError.value = `로그인 오류가 발생했습니다 (상태: ${error.response.status}).`;
+    } else if (error.request) {
+      // The request was made but no response was received
+      console.error("Error request:", error.request);
+      loginError.value = "서버에 연결할 수 없습니다. 네트워크를 확인하거나 서버가 실행 중인지 확인하세요.";
+    } else {
+      // Something happened in setting up the request that triggered an Error
+      console.error('Error message:', error.message);
+      loginError.value = "로그인 요청 중 오류가 발생했습니다.";
+    }
+  } finally {
+      isLoading.value = false; // Reset loading state
+  }
 };
 
-const loginWithGoogle = () => {
-  console.log("Login with Google");
-  alert("Login with Google clicked");
-  // Add Google Sign-in logic
-};
-
-const loginWithFacebook = () => {
-  console.log("Login with Facebook");
-  alert("Login with Facebook clicked");
-  // Add Facebook Sign-in logic
-};
-
-const loginWithApple = () => {
-  console.log("Login with Apple");
-  alert("Login with Apple clicked");
-  // Add Apple Sign-in logic
-};
-
-const goToSignup = () => {
-  console.log("Navigate to Signup Page");
-  router.push("/Signup"); // Adjust the route as per your setup
-  // Add navigation logic (e.g., using Vue Router)
-};
-
-const forgotPassword = () => {
-  console.log("Navigate to Forgot Password Page");
-  alert("Forgot password clicked");
-  // Add navigation logic or modal display
-};
+// --- Other Methods (unchanged) ---
+const goToSignup = () => { router.push("/signup"); };
+const forgotPassword = () => { alert("Forgot password clicked (Not implemented)"); };
 </script>
 
+<!-- Keep the existing style block -->
 <style scoped>
-/* Add custom styles if Bootstrap defaults aren't enough */
 .login-container {
-  /* You can add a background image or gradient here if desired */
-  /* background: linear-gradient(to right, #ece9e6, #ffffff); */
-  /* height:40rem; */
+  min-height: 80vh;
 }
-
 .login-form {
   width: 100%;
+  max-width: 420px;
 }
-
-/* Style the password toggle button if needed */
 .btn-link {
-  color: #6c757d; /* Bootstrap's secondary color */
+  color: #6c757d;
   text-decoration: none;
 }
 .btn-link:hover {
   color: #495057;
 }
 .btn-link:focus {
-  box-shadow: none; /* Remove focus outline if desired */
+  box-shadow: none;
 }
-
-/* Ensure icon size is consistent */
 .bi {
-  vertical-align: -0.125em; /* Align Bootstrap icons nicely */
+  vertical-align: -0.125em;
+}
+.btn .spinner-border {
+  margin-right: 0.5rem;
 }
 </style>
-
-<script>
-export default {
-  name: "Login",
-};
-</script>
