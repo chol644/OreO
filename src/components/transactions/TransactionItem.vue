@@ -87,8 +87,8 @@ export default defineComponent({
 .transaction-item {
   display: flex;
   justify-content: space-between;
-  gap: 150px; /* 이걸로 간격 넓힘 */
   padding: 10px 16px;
+  width: 100%;
 }
 
 .transaction-item:last-child {
