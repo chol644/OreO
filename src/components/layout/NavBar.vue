@@ -29,6 +29,12 @@
         </div>
         <button
           class="btn btn-outline-primary btn-sm w-100 mt-2"
+          @click="goToProfileEdit"
+        >
+          내 정보 수정
+        </button>
+        <button
+          class="btn btn-outline-primary btn-sm w-100 mt-2"
           @click="logout"
         >
           로그아웃
@@ -39,6 +45,8 @@
 </template>
 
 <script>
+import router from '@/router';
+
 export default {
   name: 'NavBar',
   data() {
@@ -59,6 +67,9 @@ export default {
       this.showMenu = !this.showMenu;
     },
 
+    goToProfileEdit(){
+      this.$router.push('/profile-edit'); // 프로필 수정 페이지로 이동
+    },
     // 로그아웃 함수
     logout() {
       localStorage.removeItem('userId'); // userId 삭제

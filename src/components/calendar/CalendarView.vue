@@ -84,6 +84,7 @@ export default defineComponent({
     const getTransactionsForDay = (date) => {
       return transactionsStore.getTransactionsByDate(date);
     };
+    
     const selectDay = (date) => {
       selectedDate.value = date;
       transactionsStore.setSelectedDate(date);
