@@ -45,7 +45,7 @@ export default {
     return {
       navLinks: [
         { name: '달력', path: '/' },
-        { name: '내역', path: '/transactions' },
+        { name: '내역', path: '/report' },
         { name: '차트', path: '/chart' },
       ],
       showMenu: false, // 메뉴 토글 상태
