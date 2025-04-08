@@ -71,6 +71,9 @@ import {
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import DoughnutChart from '@/pages/ChartVIew/components/DoughnutChart.vue';
 import LineChart from '@/pages/ChartVIew/components/LineChart.vue';
+import { useAuthStore } from '@/stores/auth';
+
+const authStore = useAuthStore();
 
 ChartJS.register(
   ArcElement,
@@ -344,7 +347,13 @@ const loadData = async () => {
   isLoaded.value = false;
   chartData.value = { labels: [], datasets: [] };
 
-  const response = await fetch('/api/users/1');
+  const userId = authStore.user?.id;
+  if (!userId) {
+    console.error('로그인된 사용자 없음');
+    return;
+  }
+
+  const response = await fetch(`/api/users/${userId}`);
   const data = await response.json();
   const transactions = data.transactions;
 

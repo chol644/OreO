@@ -33,6 +33,23 @@
           "transactionId": 101
         }
       ]
+    },
+    {
+      "id": "f2b5",
+      "email": "aaa@naver.com",
+      "password": "aaa",
+      "nickname": "aaa",
+      "transactions": [
+        {
+          "type": "expense",
+          "amount": 1000,
+          "category": "식비",
+          "asset": "카드",
+          "memo": "asdf",
+          "date": "2025-04-08T06:47:51.855Z",
+          "transactionId": 101
+        }
+      ]
     }
   ]
 }
