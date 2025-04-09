@@ -1,29 +1,215 @@
 {
   "users": [
     {
+      "id": "1",
+      "email": "test@example.com",
+      "password": "1234",
+      "nickname": "테스터",
       "transactions": [
         {
-          "type": "expense",
-          "amount": 50011,
-          "category": "교통비",
-          "asset": "카드",
-          "memo": "커피 (1개월차 할부)",
-          "date": "2025-04-09T01:41:17.637Z",
-          "installmentMonthTotal": 2,
+          "type": "income",
+          "amount": 3000000,
+          "category": "월급",
+          "asset": "현금",
+          "memo": "",
+          "date": "2025-03-31T15:00:00.000Z",
           "transactionId": 101
         },
         {
           "type": "expense",
-          "amount": 50011,
-          "category": "교통비",
-          "asset": "카드",
-          "memo": "커피 (2개월차 할부)",
-          "date": "2025-05-09T01:41:17.637Z",
-          "installmentMonthTotal": 2,
+          "amount": 400000,
+          "category": "공과금/주거",
+          "asset": "현금",
+          "memo": "월세",
+          "date": "2025-03-31T15:00:00.000Z",
           "transactionId": 102
+        },
+        {
+          "type": "expense",
+          "amount": 55000,
+          "category": "교통비",
+          "asset": "현금",
+          "memo": "기후동행카드 충전",
+          "date": "2025-04-05T15:00:00.000Z",
+          "transactionId": 103
+        },
+        {
+          "type": "expense",
+          "amount": 9000,
+          "category": "식비",
+          "asset": "카드",
+          "memo": "점심",
+          "date": "2025-04-01T15:00:00.000Z",
+          "transactionId": 104
+        },
+        {
+          "type": "expense",
+          "amount": 12000,
+          "category": "문화생활",
+          "asset": "카드",
+          "memo": "영화 관람",
+          "date": "2025-04-04T15:00:00.000Z",
+          "transactionId": 105
+        },
+        {
+          "type": "income",
+          "amount": 100000,
+          "category": "용돈",
+          "asset": "현금",
+          "memo": "",
+          "date": "2025-04-14T15:00:00.000Z",
+          "transactionId": 106
+        },
+        {
+          "type": "expense",
+          "amount": 13000,
+          "category": "식비",
+          "asset": "카드",
+          "memo": "점심",
+          "date": "2025-04-08T15:00:00.000Z",
+          "transactionId": 107
+        },
+        {
+          "type": "expense",
+          "amount": 130000,
+          "category": "패션/미용",
+          "asset": "카드",
+          "memo": "미용실",
+          "date": "2025-04-17T15:00:00.000Z",
+          "transactionId": 108
+        },
+        {
+          "type": "expense",
+          "amount": 30000,
+          "category": "마트/편의점",
+          "asset": "현금",
+          "memo": "장보기",
+          "date": "2025-04-19T15:00:00.000Z",
+          "transactionId": 109
+        },
+        {
+          "type": "expense",
+          "amount": 80000,
+          "category": "통신비",
+          "asset": "카드",
+          "memo": "휴대폰 요금",
+          "date": "2025-04-21T15:00:00.000Z",
+          "transactionId": 110
+        },
+        {
+          "type": "expense",
+          "amount": 10000,
+          "category": "식비",
+          "asset": "현금",
+          "memo": "저녁",
+          "date": "2025-04-21T15:00:00.000Z",
+          "transactionId": 111
+        },
+        {
+          "type": "expense",
+          "amount": 5000,
+          "category": "마트/편의점",
+          "asset": "카드",
+          "memo": "군것질",
+          "date": "2025-04-24T15:00:00.000Z",
+          "transactionId": 112
+        },
+        {
+          "type": "expense",
+          "amount": 3000,
+          "category": "마트/편의점",
+          "asset": "현금",
+          "memo": "간식",
+          "date": "2025-04-23T15:00:00.000Z",
+          "transactionId": 113
+        },
+        {
+          "type": "expense",
+          "amount": 60000,
+          "category": "공과금/주거",
+          "asset": "현금",
+          "memo": "가스비",
+          "date": "2025-04-29T15:00:00.000Z",
+          "transactionId": 114
+        },
+        {
+          "type": "income",
+          "amount": 250000,
+          "category": "부수입",
+          "asset": "카드",
+          "memo": "알바비",
+          "date": "2025-04-26T15:00:00.000Z",
+          "transactionId": 115
+        },
+        {
+          "type": "expense",
+          "amount": 100000,
+          "category": "마트/편의점",
+          "asset": "카드",
+          "memo": " (1개월차 할부)",
+          "date": "2025-04-09T02:05:03.737Z",
+          "installmentMonthTotal": 3,
+          "transactionId": 116
+        },
+        {
+          "type": "expense",
+          "amount": 100000,
+          "category": "마트/편의점",
+          "asset": "카드",
+          "memo": " (2개월차 할부)",
+          "date": "2025-05-09T02:05:03.737Z",
+          "installmentMonthTotal": 3,
+          "transactionId": 117
+        },
+        {
+          "type": "expense",
+          "amount": 100000,
+          "category": "마트/편의점",
+          "asset": "카드",
+          "memo": " (3개월차 할부)",
+          "date": "2025-06-09T02:05:03.737Z",
+          "installmentMonthTotal": 3,
+          "transactionId": 118
         }
-      ],
-      "id": "d06a"
+      ]
+    },
+    {
+      "id": "551d",
+      "email": "nir2y@naver.com",
+      "password": "1234",
+      "nickname": "예린",
+      "transactions": [
+        {
+          "type": "expense",
+          "amount": 1000,
+          "category": "문화생활",
+          "asset": "카드",
+          "memo": " (1개월차 할부)",
+          "date": "2025-04-09T02:00:31.711Z",
+          "installmentMonthTotal": 3,
+          "transactionId": 101
+        },
+        {
+          "type": "expense",
+          "amount": 1000,
+          "category": "문화생활",
+          "asset": "카드",
+          "memo": " (2개월차 할부)",
+          "date": "2025-05-09T02:00:31.711Z",
+          "installmentMonthTotal": 3,
+          "transactionId": 102
+        },
+        {
+          "type": "expense",
+          "amount": 1000,
+          "category": "문화생활",
+          "asset": "카드",
+          "memo": " (3개월차 할부)",
+          "date": "2025-06-09T02:00:31.711Z",
+          "installmentMonthTotal": 3,
+          "transactionId": 103
+        }
+      ]
     }
   ]
 }
