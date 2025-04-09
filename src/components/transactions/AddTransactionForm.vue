@@ -11,7 +11,10 @@
             <option value="income">수입</option>
           </select>
         </div>
-        <div class="form-line d-flex align-items-center">
+        <div
+          class="form-line d-flex align-items-center"
+          v-if="type === 'expense'"
+        >
           <label class="form-label">할부</label>
           <input
             type="number"
