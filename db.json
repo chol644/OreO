@@ -62,7 +62,7 @@
         },
         {
           "type": "expense",
-          "amount": 13000222,
+          "amount": 13000,
           "category": "식비",
           "asset": "카드",
           "memo": "점심",

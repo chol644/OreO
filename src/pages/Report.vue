@@ -18,12 +18,18 @@
             <h6 class="text-secondary">수입</h6>
             <p class="amount text-success">₩{{ formatAmount(incomeTotal) }}</p>
           </div>
+          <div class="summary-item">
+            <h6 class="text-secondary">사용한 돈의 시간 가치</h6>
+            <p class="amount text-warning">
+              {{ getTimeValue(expenseTotal) }}
+            </p>
+          </div>
         </div>
       </div>
     </div>
     <!-- 검색 결과 헤더 -->
-    <div class="d-flex align-items-center mb-3">
-      <span class="me-2 fw-semibold text-secondary">검색 결과 :</span>
+    <div class="d-flex align-items-center m-3">
+      <span class="me-2 fw-semibold text-secondary">💡 검색 결과 :</span>
       <span class="badge bg-primary fs-6"
         >{{ filteredTransactions.length }} 건</span
       >
@@ -82,11 +88,13 @@
           placeholder="🔍 내용 또는 메모"
         />
       </span>
+
       <!-- 엑셀 다운로드 아이콘 -->
-      <div class="d-flex justify-content-center">
+      <div class="w-100">
+        <!--d-flex justify-content-center-->
         <span
           @click="exportToExcel"
-          class="btn btn-outline-success d-flex justify-content-center align-items-center p-0"
+          class="btn float-end btn-outline-success ms-auto d-flex justify-content-center align-items-center p-0"
           style="width: 40px; height: 40px"
         >
           <img
@@ -102,49 +110,50 @@
 
         <!-- 초기화 -->
         <span>
-          <button class="btn btn-primary float-end" @click="resetFilters">
+          <button
+            class="btn btn-outline-primary float-end"
+            @click="resetFilters"
+          >
             초기화
           </button>
         </span>
       </div>
     </div>
+  </div>
 
-    <!-- 테이블 -->
-    <div class="table-responsive rounded shadow-sm overflow-hidden">
-      <table
-        class="table table-bordered table-hover align-middle text-center mb-0"
-      >
-        <thead class="table-light">
-          <tr>
-            <th scope="col">No.</th>
-            <th scope="col">날짜</th>
-            <th scope="col">자산</th>
-            <th scope="col">분류</th>
-            <th scope="col">금액</th>
-            <th scope="col">내용</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="(tx, index) in filteredTransactions"
-            :key="tx.transactionId"
-          >
-            <td>{{ index + 1 }}</td>
-            <td>{{ formatDate(tx.date) }}</td>
-            <td>{{ tx.asset }}</td>
-            <td>{{ tx.category.trim() }}</td>
-            <td>{{ formatAmount(tx.amount) }} 원</td>
-            <td>{{ tx.memo }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+  <!-- 테이블 -->
+  <div class="table-responsive rounded shadow-sm overflow-hidden">
+    <table
+      class="table table-bordered table-hover align-middle text-center mb-0"
+    >
+      <thead class="table-light">
+        <tr>
+          <th scope="col">No.</th>
+          <th scope="col">날짜</th>
+          <th scope="col">자산</th>
+          <th scope="col">분류</th>
+          <th scope="col">금액</th>
+          <th scope="col">내용</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(tx, index) in filteredTransactions" :key="tx.transactionId">
+          <td>{{ index + 1 }}</td>
+          <td>{{ formatDate(tx.date) }}</td>
+          <td>{{ tx.asset }}</td>
+          <td>{{ tx.category.trim() }}</td>
+          <td>{{ formatAmount(tx.amount) }} 원</td>
+          <td>{{ tx.memo }}</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </template>
 
 <script>
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
+const minimumWage = 10030;
 export default {
   name: 'ReportPage',
   data() {
@@ -238,6 +247,25 @@ export default {
     },
   },
   methods: {
+    getTimeValue(amount) {
+      // 시간 가치 계산 (총 시간)
+      const totalHours = amount / minimumWage;
+
+      // 시간과 분으로 변환
+      const hours = Math.floor(totalHours); // 정수 시간
+      const minutes = Math.round((totalHours - hours) * 60); // 남은 시간을 분으로 환산 후 반올림
+
+      // 결과 문자열 생성
+      let resultString = '';
+      if (hours > 0) {
+        resultString += `${hours}시간 `;
+      }
+      if (minutes > 0) {
+        resultString += ` ${minutes}분`;
+      }
+
+      return resultString;
+    },
     fetchTransactions() {
       fetch('http://localhost:3000/users')
         .then((res) => res.json())
@@ -458,42 +486,9 @@ table tbody tr:hover {
   transition: background-color 0.2s ease;
 }
 
-/* ===== 반응형 ===== */
-@media (max-width: 768px) {
-  .filter {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .inputMemo,
-  .period-filter,
-  .filter > button {
-    width: 100%;
-    max-width: 100%;
-  }
-
-  .total {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .total > span {
-    width: 90%;
-  }
-
-  .btn {
-    width: 100%;
-  }
-
-  table th,
-  table td {
-    font-size: 0.85rem;
-    white-space: nowrap;
-  }
-  .excel-icon:hover {
-    transform: scale(1.3);
-    transition: transform 0.03s ease-in-out;
-  }
+.excel-icon:hover {
+  transform: scale(1.3);
+  transition: transform 0.03s ease-in-out;
 }
 .card {
   border: none;
@@ -549,5 +544,38 @@ table tbody tr:hover {
 
 .text-success {
   color: #01c12b !important;
+}
+/* ===== 반응형 ===== */
+@media (max-width: 768px) {
+  .filter {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .inputMemo,
+  .period-filter,
+  .filter > button {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .total {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .total > span {
+    width: 90%;
+  }
+
+  .btn {
+    width: 100%;
+  }
+
+  table th,
+  table td {
+    font-size: 0.85rem;
+    white-space: nowrap;
+  }
 }
 </style>
