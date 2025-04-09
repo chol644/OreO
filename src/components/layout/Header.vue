@@ -1,17 +1,13 @@
 <template>
-  <header class="header">
-    <div class="container">
-      <div class="header-content">
-        <div class="logo">
-          <img src="@/assets/logo.png" alt="가계부 로고" height="40" />
-        </div>
-        <NavBar />
-      </div>
-    </div>
+  <header class="app-header">
+    <!-- 상단 로고 & 내비게이션 -->
+    <NavBar />
   </header>
 </template>
+
 <script>
-import NavBar from './NavBar.vue';
+import NavBar from '@/components/layout/NavBar.vue';
+
 export default {
   name: 'Header',
   components: {
@@ -19,23 +15,12 @@ export default {
   },
 };
 </script>
+
 <style scoped>
-.header {
-  background-color: #ffffff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  padding: 16px 0;
-}
-
-.header-content {
-  display: flex;
-  align-items: center;
-}
-
-.logo {
-  margin-right: 40px;
-}
-.logo-img {
-  height: 300px; /* 로고 크기를 키우기 */
-  width: auto; /* 비율 유지 */
+.app-header {
+  width: 100%;
+  background-color: #fff;
+  border-bottom: 1px solid #ddd;
+  z-index: 100;
 }
 </style>
