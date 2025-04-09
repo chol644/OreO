@@ -1,23 +1,35 @@
 <template>
   <nav class="main-nav">
-    <div class="nav-links">
-      <router-link
-        v-for="link in navLinks"
-        :key="link.path"
-        :to="link.path"
-        class="nav-link"
-        active-class="active"
-      >
-        {{ link.name }}
-      </router-link>
+    <!-- 로고 -->
+    <router-link to="/" class="logo-link">
+      <img src="../../assets/logo.png" alt="로고" class="logo" />
+    </router-link>
+
+    <!-- 메뉴 -->
+    <div class="nav-container">
+      <!-- 내비게이션 링크 -->
+      <div class="nav-links">
+        <router-link
+          v-for="link in navLinks"
+          :key="link.path"
+          :to="link.path"
+          class="nav-link"
+          active-class="active"
+          @click="closeMenu"
+        >
+          {{ link.name }}
+        </router-link>
+      </div>
     </div>
+
+    <!-- 우측: 프로필 아이콘 및 드롭다운 -->
     <div class="profile-menu">
       <i
         class="bi bi-person-circle"
-        @click="toggleMenu"
+        @click="toggleProfileMenu"
         style="cursor: pointer; font-size: 24px"
       ></i>
-      <div v-if="showMenu" class="profile-dropdown">
+      <div v-if="showProfileMenu" class="profile-dropdown">
         <div class="d-flex flex-column mb-2">
           <!-- 닉네임과 이메일을 줄바꿈을 해서 보이도록 처리 -->
           <p class="mb-1 text-truncate">
@@ -45,8 +57,6 @@
 </template>
 
 <script>
-import router from '@/router';
-
 export default {
   name: 'NavBar',
   data() {
@@ -56,41 +66,30 @@ export default {
         { name: '내역', path: '/report' },
         { name: '차트', path: '/chart' },
       ],
-      showMenu: false, // 메뉴 토글 상태
+      showProfileMenu: false, // 프로필 메뉴 토글 상태
       userNickname: '', // 사용자 닉네임
       userEmail: '', // 사용자 이메일
     };
   },
   methods: {
-    // 메뉴 토글 함수
-    toggleMenu() {
-      this.showMenu = !this.showMenu;
+    toggleProfileMenu() {
+      this.showProfileMenu = !this.showProfileMenu;
     },
-
-    goToProfileEdit(){
-      this.$router.push('/profile-edit'); // 프로필 수정 페이지로 이동
+    goToProfileEdit() {
+      this.$router.push('/profile-edit');
     },
-    // 로그아웃 함수
     logout() {
-      localStorage.removeItem('userId'); // userId 삭제
-      localStorage.removeItem('userNickname'); // 닉네임 삭제
-      localStorage.removeItem('userEmail'); // 이메일 삭제
-      this.$router.push('/login'); // 로그인 페이지로 리디렉션
+      localStorage.removeItem('userId');
+      localStorage.removeItem('userNickname');
+      localStorage.removeItem('userEmail');
+      this.$router.push('/login');
     },
   },
   mounted() {
-    // 로컬스토리지에서 사용자 정보 불러오기
     const nickname = localStorage.getItem('userNickname');
     const email = localStorage.getItem('userEmail');
-
-    if (nickname && email) {
-      this.userNickname = nickname;
-      this.userEmail = email;
-    } else {
-      // 정보가 없으면 기본값 설정 (로그인된 상태에서만 이 정보가 있어야 함)
-      this.userNickname = '이름 없음';
-      this.userEmail = '이메일 없음';
-    }
+    this.userNickname = nickname || '이름 없음';
+    this.userEmail = email || '이메일 없음';
   },
 };
 </script>
@@ -98,34 +97,57 @@ export default {
 <style scoped>
 .main-nav {
   display: flex;
-  justify-content: space-between; /* 링크와 프로필 메뉴 양쪽 끝으로 배치 */
+  justify-content: space-between;
+  align-items: center;
+  height: 60px;
+  background-color: white;
+  border-bottom: 1px solid #ddd;
+
+  /* 추가: 최대 너비 설정 및 가운데 정렬 */
+  max-width: 1200px;
   margin: 0 auto;
-  position: relative;
-  width: 100%; /* 부모 요소에 맞게 넓이 설정 */
+  padding: 0 24px;
+}
+
+.logo-link {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  height: 40px;
+}
+
+.nav-container {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.menu-toggle {
+  display: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.nav-links {
+  display: flex;
+  gap: 24px;
 }
 
 .nav-link {
-  display: inline-block;
-  padding: 10px 24px;
-  margin: 0 30px;
-  color: #333;
   text-decoration: none;
+  color: #333;
   font-weight: 500;
+  padding: 8px 12px;
   border-radius: 4px;
   transition: all 0.2s ease;
 }
-.main-nav .nav-link {
-  margin: 0 10px; /* 메뉴 링크들 간의 간격을 좁히기 위한 설정 */
-}
+
 .nav-link:hover {
   background-color: #ceecff;
 }
-.nav-links {
-  display: flex;
-  justify-content: center;
-  flex-grow: 1; /* 가운데 정렬을 위해 남는 공간 차지 */
-  gap: 60px; /* 링크들 간 간격 좁히기 */
-}
+
 .nav-link.active {
   background-color: #ceecff;
   font-weight: bold;
@@ -133,7 +155,6 @@ export default {
 
 .profile-menu {
   position: relative;
-  margin-right: 20px;
 }
 
 .profile-dropdown {
@@ -142,16 +163,16 @@ export default {
   right: 0;
   background-color: white;
   border: 1px solid #ddd;
-  padding: 15px; /* 패딩을 더 넓게 설정 */
+  padding: 15px;
+  width: 250px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 250px; /* 창 크기 더 넓게 조정 */
   z-index: 10;
 }
 
 .profile-dropdown p {
   margin: 5px 0;
   font-size: 14px;
-  white-space: normal; /* 줄바꿈 허용 */
+  white-space: normal;
 }
 
 .profile-dropdown button {
@@ -167,4 +188,38 @@ export default {
 .profile-dropdown button:hover {
   background-color: #a9d8f4;
 }
+/* 
+@media (max-width: 768px) {
+  .main-nav {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 12px;
+  }
+
+  .menu-toggle {
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+  }
+
+  .nav-links.open {
+    display: flex;
+  }
+
+  .nav-link {
+    padding: 12px;
+    text-align: center;
+  }
+
+  .profile-menu {
+    align-self: flex-end;
+    margin-top: 10px;
+  }
+} */
 </style>
