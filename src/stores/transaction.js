@@ -162,7 +162,10 @@ export const useTransactionStore = defineStore('transaction', {
         await fetch(`/api/users/${user.id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ transactions: updatedTransactions }),
+          body: JSON.stringify({
+            ...user,
+            transactions: updatedTransactions,
+          }),
         });
 
         this.transactions = updatedTransactions;

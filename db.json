@@ -1,10 +1,6 @@
 {
   "users": [
     {
-      "id": "d06a",
-      "email": "OreO@naver.com",
-      "password": "1234",
-      "nickname": "오레오",
       "transactions": [
         {
           "type": "income",
@@ -59,15 +55,6 @@
           "memo": "",
           "date": "2025-04-14T15:00:00.000Z",
           "transactionId": 106
-        },
-        {
-          "type": "expense",
-          "amount": 13000,
-          "category": "식비",
-          "asset": "카드",
-          "memo": "점심",
-          "date": "2025-04-08T15:00:00.000Z",
-          "transactionId": 107
         },
         {
           "type": "expense",
@@ -151,7 +138,8 @@
           "installmentMonthTotal": 0,
           "transactionId": 116
         }
-      ]
+      ],
+      "id": "d06a"
     }
   ]
 }
