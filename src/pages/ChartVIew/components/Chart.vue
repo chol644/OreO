@@ -20,7 +20,7 @@
       <option value="profit">최근 3개월 순이익</option>
       <option value="expense-3m">최근 3개월 지출</option>
       <option value="income-3m">최근 3개월 수입</option>
-      <option value="expense-compare">전달 비교 지출</option>
+      <option value="expense-compare">전월 비교 지출</option>
     </select>
   </div>
 
@@ -99,6 +99,11 @@ import LineChart from '@/pages/ChartVIew/components/LineChart.vue';
 import BarChart from '@/pages/ChartVIew/components/StackedBarChart.vue';
 import { useAuthStore } from '@/stores/auth';
 import { useTransactionStore } from '@/stores/transaction';
+import {
+  chartColors,
+  expenseCategories,
+  incomeCategories,
+} from '@/utils/chartUtil';
 
 ChartJS.register(
   ArcElement,
@@ -126,23 +131,6 @@ const selectedOption = ref('expense');
 const currentDate = new Date();
 const currentYear = ref(currentDate.getFullYear());
 const currentMonth = ref(currentDate.getMonth() + 1);
-
-const expenseCategories = [
-  '식비',
-  '교통비',
-  '문화생활',
-  '마트/편의점',
-  '패션/미용',
-  '생활용품',
-  '공과금/주거',
-  '통신비',
-  '건강',
-  '교육',
-  '경조사/회비',
-  '부모님',
-];
-
-const incomeCategories = ['월급', '부수입', '용돈', '상여', '금융소득'];
 
 const optionText = computed(
   () =>
@@ -254,28 +242,21 @@ const loadCategoryChartData = ({
     });
   });
 
-  chartData.value.labels = categories;
+  const sorted = Object.entries(totalByCategory)
+    .sort((a, b) => b[1] - a[1]) // 금액 기준 내림차순
+    .filter(([_, amount]) => amount > 0); // 0원은 제거
+
+  const sortedLabels = sorted.map(([label]) => label);
+  const sortedData = sorted.map(([_, amount]) => amount);
+
+  chartData.value.labels = sortedLabels;
   chartData.value.datasets = [
     {
       label,
-      data: categories.map((cat) => totalByCategory[cat]),
-      backgroundColor:
-        categories.length === 12
-          ? [
-              '#FF6384',
-              '#36A2EB',
-              '#4BC0C0',
-              '#9966FF',
-              '#FF3B30',
-              '#FF9F40',
-              '#8AC926',
-              '#FF6B6B',
-              '#6A4C93',
-              '#00796B',
-              '#FFD166',
-              '#00C49F',
-            ]
-          : ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
+      data: sortedData,
+      backgroundColor: sortedLabels.map(
+        (_, i) => chartColors[i % chartColors.length]
+      ),
       hoverOffset: 8,
     },
   ];
@@ -303,9 +284,10 @@ const donutChartOptions = {
         const dataset = ctx.chart.data.datasets[0];
         const total = dataset.data.reduce((acc, val) => acc + val, 0);
         const percentage = ((value / total) * 100).toFixed(1);
-        return percentage === '0.0' ? '' : `${percentage}%`;
+        // return percentage === '0.0' ? '' : `${percentage}%`;
+        return percentage < 1 ? '' : `${percentage}%`;
       },
-      color: '#F5F5F5',
+      color: '#F5F5F5', //F5F5F5
       font: { weight: 'bold', size: 13 },
     },
 
@@ -474,20 +456,7 @@ const loadExpenseCompareData = (transactions) => {
   chartData.value.datasets = expenseCategories.map((cat, idx) => ({
     label: cat,
     data: [dataPrev[cat], dataCurrent[cat]],
-    backgroundColor: [
-      '#FF6384',
-      '#36A2EB',
-      '#4BC0C0',
-      '#9966FF',
-      '#FF3B30',
-      '#FF9F40',
-      '#8AC926',
-      '#FF6B6B',
-      '#6A4C93',
-      '#00796B',
-      '#FFD166',
-      '#00C49F',
-    ][idx % 12],
+    backgroundColor: chartColors[idx % chartColors.length],
     stack: 'stack1',
   }));
 
@@ -557,5 +526,7 @@ watch(
   height: 400px;
   margin: 0 auto;
   position: relative;
+  background-color: #ffffff;
+  border-radius: 15px;
 }
 </style>
