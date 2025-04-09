@@ -99,7 +99,7 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 60px;
+  height: 80px;
   background-color: white;
   border-bottom: 1px solid #ddd;
 
@@ -188,38 +188,4 @@ export default {
 .profile-dropdown button:hover {
   background-color: #a9d8f4;
 }
-/* 
-@media (max-width: 768px) {
-  .main-nav {
-    flex-direction: column;
-    align-items: stretch;
-    padding: 12px;
-  }
-
-  .menu-toggle {
-    display: block;
-    margin-bottom: 10px;
-  }
-
-  .nav-links {
-    display: none;
-    flex-direction: column;
-    width: 100%;
-    gap: 10px;
-  }
-
-  .nav-links.open {
-    display: flex;
-  }
-
-  .nav-link {
-    padding: 12px;
-    text-align: center;
-  }
-
-  .profile-menu {
-    align-self: flex-end;
-    margin-top: 10px;
-  }
-} */
 </style>
