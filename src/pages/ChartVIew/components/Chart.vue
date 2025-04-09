@@ -46,10 +46,14 @@
       </p>
     </div>
   </div>
-
-  <h2 v-else-if="isLoaded && !hasData" class="text-center text-xl mt-10">
-    데이터가 없습니다.
-  </h2>
+  <div v-else-if="isLoaded && !hasData" class="text-center mt-3">
+    <img
+      src="@/assets/nodata.png"
+      alt="데이터 없음"
+      style="width: 400px; padding-top: 30px"
+      class="mx-auto opacity-70 mt-0"
+    />
+  </div>
 
   <h2 v-else class="text-center text-xl mt-10">
     데이터를 불러오는 중입니다...
@@ -123,7 +127,7 @@ const optionText = computed(
       profit: '순이익',
       'expense-3m': '최근 3개월 지출',
       'income-3m': '최근 3개월 수입',
-    }[selectedOption.value])
+    })[selectedOption.value]
 );
 
 const isSameMonth = (dateStr, year, month) => {
