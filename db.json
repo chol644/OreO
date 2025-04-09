@@ -14,6 +14,15 @@
           "memo": "",
           "date": "2025-04-08T06:00:02.349Z",
           "transactionId": 101
+        },
+        {
+          "type": "expense",
+          "amount": 100000,
+          "category": "패션/미용",
+          "asset": "카드",
+          "memo": "구찌 지갑",
+          "date": "2025-04-09T01:14:28.086Z",
+          "transactionId": 102
         }
       ]
     },
