@@ -4,6 +4,7 @@ export const incomeCategoryMap = {
   용돈: '💸',
   상여: '🎉',
   금융소득: '🏦',
+  기타: '🎁',
 };
 
 export const expenseCategoryMap = {
@@ -19,6 +20,7 @@ export const expenseCategoryMap = {
   교육: '📚',
   '경조사/회비': '🎁',
   부모님: '👨‍👩‍👧‍👦',
+  기타: '🎸',
 };
 export const emojiMap = {
   ...incomeCategoryMap,

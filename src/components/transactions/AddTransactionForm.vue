@@ -11,6 +11,16 @@
             <option value="income">수입</option>
           </select>
         </div>
+        <div class="form-line d-flex align-items-center">
+          <label class="form-label">할부</label>
+          <input
+            type="number"
+            class="form-control ms-auto"
+            v-model.number="installmentMonths"
+            placeholder="개월 수 (예: 3)"
+            min="0"
+          />
+        </div>
 
         <div class="form-line d-flex align-items-center">
           <label class="form-label">금액</label>
@@ -76,6 +86,7 @@ export default {
       category: '',
       asset: '카드',
       memo: '',
+      installmentMonths: 0,
     };
   },
 
@@ -116,23 +127,48 @@ export default {
 
       const store = useTransactionStore();
       const { selectedDate } = storeToRefs(store);
-      const newTransaction = {
-        type: this.type,
-        amount: this.amount,
-        category: this.removeEmoji(this.category),
-        asset: this.asset,
-        memo: this.memo,
-        date: selectedDate.value.toISOString(),
-      };
+      const baseDate = new Date(selectedDate.value);
+      const months = this.installmentMonths || 0;
 
-      try {
+      if (months <= 1) {
+        // 일반 단건 저장
+        const newTransaction = {
+          type: this.type,
+          amount: this.amount,
+          category: this.removeEmoji(this.category),
+          asset: this.asset,
+          memo: this.memo,
+          date: selectedDate.value.toISOString(),
+          installmentMonthTotal: 0,
+        };
+
         await store.addTransaction(newTransaction);
-        await store.fetchTransactions();
-        this.$emit('close');
-      } catch (err) {
-        console.error('저장 실패:', err);
-        alert('저장 중 오류가 발생했습니다. 다시 시도해주세요.');
+      } else {
+        const totalAmount = this.amount;
+        const baseAmount = Math.floor(totalAmount / months);
+        const remainder = totalAmount % months;
+
+        for (let i = 0; i < months; i++) {
+          const installmentDate = new Date(baseDate);
+          installmentDate.setMonth(baseDate.getMonth() + i);
+          // 마지막 달에 차액을 더해줌
+          const amountThisMonth =
+            i === months - 1 ? baseAmount + remainder : baseAmount;
+          const newTransaction = {
+            type: this.type,
+            amount: amountThisMonth,
+            category: this.removeEmoji(this.category),
+            asset: this.asset,
+            memo: `${this.memo} (${i + 1}개월차 할부)`,
+            date: installmentDate.toISOString(),
+            installmentMonthTotal: months,
+          };
+
+          await store.addTransaction(newTransaction);
+        }
       }
+      await store.fetchTransactions();
+      this.$emit('close');
     },
   },
 };
