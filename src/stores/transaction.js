@@ -37,7 +37,7 @@ export const useTransactionStore = defineStore('transaction', {
         .reduce((sum, t) => sum + t.amount, 0);
     },
     getTotalAmount(state) {
-      return this.getTotalIncome - this.getTotalExpense;
+      return this.getTotalIncome(state) - this.getTotalExpense(state);
     },
   },
   actions: {
@@ -89,6 +89,7 @@ export const useTransactionStore = defineStore('transaction', {
 
     async addTransaction(newTransaction) {
       const userId = localStorage.getItem('userId');
+      console.log('userId:', userId);
       if (!userId) throw new Error('userId 없음');
 
       const res = await fetch(`/api/users/${userId}`);
