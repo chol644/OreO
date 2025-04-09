@@ -1,44 +1,27 @@
 {
   "users": [
     {
-      "id": "cf2a",
-      "email": "nir@naver.com",
-      "password": "1234",
-      "nickname": "예린12",
-      "transactions": [
-        {
-          "type": "expense",
-          "amount": 1234,
-          "category": "교통비",
-          "asset": "카드",
-          "memo": "",
-          "date": "2025-04-08T06:00:02.349Z",
-          "transactionId": 101
-        }
-      ]
-    },
-    {
-      "id": "5a0c",
+      "id": "d06a",
       "email": "nir2y@naver.com",
       "password": "1234",
-      "nickname": "예린",
+      "nickname": "예린이",
       "transactions": [
         {
           "type": "expense",
-          "amount": 1234,
+          "amount": 12222,
           "category": "문화생활",
           "asset": "카드",
-          "memo": "",
-          "date": "2025-04-08T06:07:01.168Z",
+          "memo": "asdf",
+          "date": "2025-04-09T00:14:13.876Z",
           "transactionId": 101
         },
         {
           "type": "income",
-          "amount": 12222,
-          "category": "월급",
+          "amount": 100000,
+          "category": "상여",
           "asset": "카드",
-          "memo": "",
-          "date": "2025-05-01T15:00:00.000Z",
+          "memo": "1222",
+          "date": "2025-05-02T15:00:00.000Z",
           "transactionId": 102
         }
       ]
