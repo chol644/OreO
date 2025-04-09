@@ -65,29 +65,6 @@
           "amount": 13000222,
           "category": "식비",
           "asset": "카드",
-<<<<<<< HEAD
-          "memo": "1222",
-          "date": "2025-05-02T15:00:00.000Z",
-          "transactionId": 102
-        },
-        {
-          "type": "expense",
-          "amount": 1000,
-          "category": "공과금/주거",
-          "asset": "카드",
-          "memo": "",
-          "date": "2025-03-11T15:00:00.000Z",
-          "transactionId": 103
-        },
-        {
-          "type": "expense",
-          "amount": 5000,
-          "category": "교통비",
-          "asset": "카드",
-          "memo": "",
-          "date": "2025-04-16T15:00:00.000Z",
-          "transactionId": 104
-=======
           "memo": "점심",
           "date": "2025-04-08T15:00:00.000Z",
           "transactionId": 107
@@ -118,103 +95,28 @@
           "memo": "휴대폰 요금",
           "date": "2025-04-21T15:00:00.000Z",
           "transactionId": 110
->>>>>>> main
         },
         {
           "type": "expense",
           "amount": 10000,
           "category": "식비",
-<<<<<<< HEAD
-          "asset": "카드",
-          "memo": "",
-          "date": "2025-04-08T15:00:00.000Z",
-          "transactionId": 105
-        },
-        {
-          "type": "expense",
-          "amount": 5000,
-          "category": "문화생활",
-          "asset": "카드",
-          "memo": "",
-          "date": "2025-04-21T15:00:00.000Z",
-          "transactionId": 106
-        },
-        {
-          "type": "expense",
-          "amount": 10000,
-          "category": "패션/미용",
-          "asset": "카드",
-          "memo": "",
-          "date": "2025-04-13T15:00:00.000Z",
-          "transactionId": 107
-        },
-        {
-          "type": "expense",
-          "amount": 20000,
-          "category": "생활용품",
-          "asset": "카드",
-          "memo": "",
-          "date": "2025-04-11T15:00:00.000Z",
-          "transactionId": 108
-        },
-        {
-          "type": "expense",
-          "amount": 9000,
-          "category": "통신비",
-          "asset": "카드",
-          "memo": "",
-          "date": "2025-03-03T15:00:00.000Z",
-          "transactionId": 109
-        },
-        {
-          "type": "expense",
-          "amount": 5000,
-          "category": "건강",
-          "asset": "카드",
-          "memo": "",
-          "date": "2025-03-06T15:00:00.000Z",
-          "transactionId": 110
-        },
-        {
-          "type": "expense",
-          "amount": 5000,
-          "category": "교육",
-          "asset": "카드",
-          "memo": "",
-          "date": "2025-03-17T15:00:00.000Z",
-=======
           "asset": "현금",
           "memo": "저녁",
           "date": "2025-04-21T15:00:00.000Z",
->>>>>>> main
           "transactionId": 111
         },
         {
           "type": "expense",
           "amount": 5000,
-<<<<<<< HEAD
-          "category": "경조사/회비",
-          "asset": "카드",
-          "memo": "",
-          "date": "2025-03-20T15:00:00.000Z",
-=======
           "category": "마트/편의점",
           "asset": "카드",
           "memo": "군것질",
           "date": "2025-04-24T15:00:00.000Z",
->>>>>>> main
           "transactionId": 112
         },
         {
           "type": "expense",
           "amount": 5000,
-<<<<<<< HEAD
-          "category": "부모님",
-          "asset": "카드",
-          "memo": "",
-          "date": "2025-03-18T15:00:00.000Z",
-          "transactionId": 113
-=======
           "category": "마트/편의점",
           "asset": "현금",
           "memo": "간식",
@@ -248,10 +150,8 @@
           "date": "2025-04-09T05:38:36.745Z",
           "installmentMonthTotal": 0,
           "transactionId": 116
->>>>>>> main
         }
-      ],
-      "id": "d06a"
+      ]
     }
   ]
 }
