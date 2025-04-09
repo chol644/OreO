@@ -53,6 +53,9 @@
       style="width: 400px; padding-top: 30px"
       class="mx-auto opacity-70 mt-0"
     />
+    <p style="color: #999; font-size: 18px; margin-top: 10px">
+      데이터가 없습니다
+    </p>
   </div>
 
   <h2 v-else class="text-center text-xl mt-10">
