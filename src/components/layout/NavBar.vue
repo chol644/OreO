@@ -105,7 +105,7 @@ export default {
   /* 추가: 최대 너비 설정 및 가운데 정렬 */
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 24px;
+  /* padding: 0 24px; */
 }
 
 .logo-link {
@@ -114,7 +114,8 @@ export default {
 }
 
 .logo {
-  height: 40px;
+  margin-top: 10px;
+  height: 60px;
 }
 
 .nav-container {
