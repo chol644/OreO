@@ -27,7 +27,7 @@ export const expenseCategories = [
   '교육',
   '경조사/회비',
   '부모님',
-  '기타타',
+  '기타',
 ];
 
 export const incomeCategories = [
