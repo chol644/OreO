@@ -150,6 +150,26 @@
           "date": "2025-04-09T05:38:36.745Z",
           "installmentMonthTotal": 0,
           "transactionId": 116
+        },
+        {
+          "type": "income",
+          "amount": 3300000,
+          "category": "부수입",
+          "asset": "카드",
+          "memo": "",
+          "date": "2025-03-12T15:00:00.000Z",
+          "installmentMonthTotal": 0,
+          "transactionId": 117
+        },
+        {
+          "type": "expense",
+          "amount": 13000000,
+          "category": "마트/편의점",
+          "asset": "카드",
+          "memo": "",
+          "date": "2025-03-13T15:00:00.000Z",
+          "installmentMonthTotal": 0,
+          "transactionId": 118
         }
       ]
     }

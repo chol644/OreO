@@ -21,22 +21,32 @@
       <option value="expense-3m">최근 3개월 지출</option>
       <option value="income-3m">최근 3개월 수입</option>
       <option value="expense-compare">전월 지출 비교</option>
+      <option value="income-compare">전월 수입 비교</option>
     </select>
   </div>
 
   <h2 class="mt-3 text-center font-bold text-xl">
     <template v-if="selectedOption === 'profit'"> 최근 3개월 순이익 </template>
-    <template v-else-if="selectedOption === 'expense-compare'">
-      {{ currentYear }}년 {{ currentMonth - 1 }} vs {{ currentMonth }}월
-      지출</template
+    <template
+      v-else-if="
+        selectedOption === 'expense-compare' ||
+        selectedOption === 'income-compare'
+      "
     >
+      {{ currentYear }}년 {{ currentMonth - 1 }} vs {{ currentMonth }}월
+      {{ selectedOption === 'income-compare' ? '수입' : '지출' }} 비교
+    </template>
     <template v-else>
       {{ currentYear }}년 {{ currentMonth }}월 {{ optionText }}
     </template>
   </h2>
   <div
     class="mt-10 text-center"
-    v-if="selectedOption !== 'expense-compare' && hasData"
+    v-if="
+      selectedOption !== 'expense-compare' &&
+      selectedOption !== 'income-compare' &&
+      hasData
+    "
   >
     <p class="fs-4 fw-semibold mt-3">
       <span style="color: #7c7c7c">총 {{ optionText }} : </span>
@@ -61,6 +71,30 @@
         :chart-data="chartData"
         :chart-options="chartOptions"
       />
+      <div
+        v-if="
+          selectedOption === 'expense-compare' ||
+          selectedOption === 'income-compare'
+        "
+        class="text-center mt-4"
+      >
+        <p
+          class="fw-semibold fs-5 d-flex justify-content-center flex-wrap"
+          style="color: #6b7280"
+        >
+          <span class="me-4">
+            {{ currentMonth === 1 ? currentYear - 1 : currentYear }}년
+            {{ currentMonth === 1 ? 12 : currentMonth - 1 }}월 총
+            {{ selectedOption === 'income-compare' ? '수입' : '지출' }}:
+            <span>{{ totalPrev.toLocaleString() }}원</span>
+          </span>
+          <span>
+            {{ currentYear }}년 {{ currentMonth }}월 총
+            {{ selectedOption === 'income-compare' ? '수입' : '지출' }}:
+            <span>{{ totalCur.toLocaleString() }}원</span>
+          </span>
+        </p>
+      </div>
     </div>
   </div>
   <div v-else-if="isLoaded && !hasData" class="text-center mt-3">
@@ -141,6 +175,7 @@ const optionText = computed(
       'expense-3m': '최근 3개월 지출',
       'income-3m': '최근 3개월 수입',
       'expense-compare': '전월 비교 지출',
+      'income-compare': '전월 비교 수입',
     }[selectedOption.value])
 );
 
@@ -168,16 +203,23 @@ const getLast3Months = () => {
 
 const chartComponent = computed(() => {
   if (selectedOption.value === 'profit') return LineChart;
-  if (selectedOption.value === 'expense-compare') return BarChart;
+  if (
+    selectedOption.value === 'expense-compare' ||
+    selectedOption.value === 'income-compare'
+  )
+    return BarChart; // <- 누적 막대 차트
   return DoughnutChart;
 });
 
 const chartOptions = computed(() => {
   if (selectedOption.value === 'profit') return lineChartOptions;
-  if (selectedOption.value === 'expense-compare') return stackedBarChartOptions;
+  if (
+    selectedOption.value === 'expense-compare' ||
+    selectedOption.value === 'income-compare'
+  )
+    return stackedBarChartOptions;
   return donutChartOptions;
 });
-
 const stackedBarChartOptions = {
   responsive: true,
   maintainAspectRatio: false,
@@ -245,8 +287,8 @@ const loadCategoryChartData = ({
   });
 
   const sorted = Object.entries(totalByCategory)
-    .sort((a, b) => b[1] - a[1]) // 금액 기준 내림차순
-    .filter(([_, amount]) => amount > 0); // 0원은 제거
+    .sort((a, b) => b[1] - a[1])
+    .filter(([_, amount]) => amount > 0);
 
   const sortedLabels = sorted.map(([label]) => label);
   const sortedData = sorted.map(([_, amount]) => amount);
@@ -290,7 +332,22 @@ const donutChartOptions = {
         return percentage < 1 ? '' : `${percentage}%`;
       },
       color: '#F5F5F5', //F5F5F5
-      font: { weight: 'bold', size: 13 },
+      font: (ctx) => {
+        const width = ctx.chart.width;
+        return {
+          weight: 'bold',
+          size:
+            width > 700
+              ? 14
+              : width > 500
+              ? 12
+              : width > 400
+              ? 10
+              : width > 300
+              ? 7
+              : 5,
+        };
+      },
     },
 
     legend: {
@@ -454,16 +511,57 @@ const loadExpenseCompareData = (transactions) => {
     }
   });
 
-  // chartData.value.labels = [`${prev.month}월`, `${current.month}월`];
-  // chartData.value.datasets = expenseCategories.map((cat, idx) => ({
-  //   label: cat,
-  //   data: [dataPrev[cat], dataCurrent[cat]],
-  //   backgroundColor: chartColors[idx % chartColors.length],
-  //   stack: 'stack1',
-  // }));
-
   // 전월 + 당월 합산 금액 기준으로 정렬
   const sorted = expenseCategories
+    .map((cat, idx) => ({
+      label: cat,
+      data: [dataPrev[cat], dataCurrent[cat]],
+      total: dataPrev[cat] + dataCurrent[cat],
+      color: chartColors[idx % chartColors.length],
+    }))
+    .filter((d) => d.total > 0)
+    .sort((a, b) => b.total - a.total);
+
+  chartData.value.labels = [`${prev.month}월`, `${current.month}월`];
+
+  chartData.value.datasets = sorted.map((d) => ({
+    label: d.label,
+    data: d.data,
+    backgroundColor: d.color,
+    stack: 'stack1',
+  }));
+
+  totalAmount.value = totalCur.value;
+};
+
+const loadIncomeCompareData = (transactions) => {
+  const current = { year: currentYear.value, month: currentMonth.value };
+  const prev =
+    currentMonth.value === 1
+      ? { year: currentYear.value - 1, month: 12 }
+      : { year: currentYear.value, month: currentMonth.value - 1 };
+
+  const init = () => Object.fromEntries(incomeCategories.map((c) => [c, 0]));
+  const dataCurrent = init();
+  const dataPrev = init();
+  totalCur.value = 0;
+  totalPrev.value = 0;
+
+  transactions.forEach((t) => {
+    if (t.type !== 'income' || !t.amount) return;
+    const cat = t.category.trim();
+    if (!incomeCategories.includes(cat)) return;
+
+    if (isSameMonth(t.date, current.year, current.month)) {
+      dataCurrent[cat] += t.amount;
+      totalCur.value += t.amount;
+    } else if (isSameMonth(t.date, prev.year, prev.month)) {
+      dataPrev[cat] += t.amount;
+      totalPrev.value += t.amount;
+    }
+  });
+
+  const sorted = incomeCategories
     .map((cat, idx) => ({
       label: cat,
       data: [dataPrev[cat], dataCurrent[cat]],
@@ -499,8 +597,14 @@ const loadData = () => {
   else if (selectedOption.value === 'income-3m') loadIncome3MData(transactions);
   else if (selectedOption.value === 'expense-compare')
     loadExpenseCompareData(transactions);
+  else if (selectedOption.value === 'income-compare') {
+    loadIncomeCompareData(transactions);
+  }
 
-  if (selectedOption.value === 'expense-compare') {
+  if (
+    selectedOption.value === 'expense-compare' ||
+    selectedOption.value === 'income-compare'
+  ) {
     hasData.value = totalPrev.value !== 0 && totalCur.value !== 0;
   } else {
     hasData.value = totalAmount.value !== 0;
