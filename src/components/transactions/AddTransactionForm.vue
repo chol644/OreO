@@ -134,7 +134,7 @@ export default {
         const baseDate = new Date(selectedDate.value);
         const months = this.installmentMonths || 0;
 
-        if (months <= 1) {
+        if (this.type === 'income' || months <= 1) {
           const newTransaction = {
             type: this.type,
             amount: this.amount,
