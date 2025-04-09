@@ -15,7 +15,6 @@
           :to="link.path"
           class="nav-link"
           active-class="active"
-          @click="closeMenu"
         >
           {{ link.name }}
         </router-link>

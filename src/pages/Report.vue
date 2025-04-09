@@ -45,7 +45,9 @@
       <!-- 금액 오름순/내림순 -->
       <span>
         <button class="btn btn-outline-dark bg-light" @click="sortByAmount">
-          금액 {{ sort.amountAsc ? '▲' : '▼' }}
+          금액
+          <span v-if="sort.amountAsc === true">▲</span>
+          <span v-else-if="sort.amountAsc === false">▼</span>
         </button>
       </span>
 
@@ -59,28 +61,46 @@
           placeholder="🔍 내용 또는 메모"
         />
       </span>
+      <!-- 엑셀 다운로드 아이콘 -->
+      <div class="d-flex justify-content-center">
+        <span
+          @click="exportToExcel"
+          class="btn btn-outline-success d-flex justify-content-center align-items-center p-0"
+          style="width: 40px; height: 40px"
+        >
+          <img
+            src="@/assets/excel_icon.png"
+            title="엑셀 다운로드"
+            alt="Excel 다운로드"
+            width="24"
+            height="24"
+            class="excel-icon"
+            style="display: block; margin: auto"
+          />
+        </span>
 
-      <!-- 초기화 -->
-      <span>
-        <button class="btn btn-primary float-end" @click="resetFilters">
-          초기화
-        </button>
-      </span>
+        <!-- 초기화 -->
+        <span>
+          <button class="btn btn-primary float-end" @click="resetFilters">
+            초기화
+          </button>
+        </span>
+      </div>
     </div>
 
     <!-- 총합(전체, 수입, 지출) -->
     <div class="total d-flex justify-content-center gap-2 flex-wrap my-3">
       <span class="bg-secondary text-white">
         전체({{ filteredTransactions.length }})<br />
-        {{ formatAmount(totalAmount) }} 원
+        <b>{{ formatAmount(totalAmount) }} 원</b>
       </span>
       <span class="bg-success text-white">
         수입({{ incomeCount }})<br />
-        {{ formatAmount(incomeTotal) }} 원
+        <b>{{ formatAmount(incomeTotal) }} 원</b>
       </span>
       <span class="bg-danger text-white">
         지출({{ expenseCount }})<br />
-        {{ formatAmount(expenseTotal) }} 원
+        <b>{{ formatAmount(expenseTotal) }} 원</b>
       </span>
     </div>
 
@@ -118,6 +138,8 @@
 </template>
 
 <script>
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 export default {
   name: 'ReportPage',
   data() {
@@ -132,41 +154,55 @@ export default {
         memo: '',
       },
       sort: {
-        amountAsc: true,
+        amountAsc: null, // 금액 정렬
       },
     };
   },
   computed: {
+    // 날짜 필터링
     filteredTransactions() {
-      // 날짜 필터링
-      return this.transactions
-        .filter((tx) => {
-          const txDate = new Date(tx.date);
-          txDate.setHours(0, 0, 0, 0); // 시간을 00:00으로 맞춤
+      const clearTime = (date) => {
+        const d = new Date(date);
+        d.setHours(0, 0, 0, 0); // 시간 00:00으로 초기화
+        return d;
+      };
 
-          const start = this.filters.startDate
-            ? new Date(this.filters.startDate)
-            : null;
-          if (start) start.setHours(0, 0, 0, 0);
+      const filtered = this.transactions.filter((tx) => {
+        const txDate = clearTime(tx.date);
+        const start = this.filters.startDate
+          ? clearTime(this.filters.startDate)
+          : null;
+        const end = this.filters.endDate
+          ? clearTime(this.filters.endDate)
+          : null;
 
-          const end = this.filters.endDate
-            ? new Date(this.filters.endDate)
-            : null;
-          if (end) end.setHours(0, 0, 0, 0);
+        return (
+          (!start || txDate >= start) &&
+          (!end || txDate <= end) &&
+          (!this.filters.asset || tx.asset === this.filters.asset) &&
+          (!this.filters.type || tx.type === this.filters.type) &&
+          (!this.filters.memo || tx.memo.includes(this.filters.memo))
+        );
+      });
 
-          return (
-            (!start || txDate >= start) &&
-            (!end || txDate <= end) &&
-            (!this.filters.asset || tx.asset === this.filters.asset) &&
-            (!this.filters.type || tx.type === this.filters.type) &&
-            (!this.filters.memo || tx.memo.includes(this.filters.memo))
-          );
-        })
-        .sort((a, b) => {
-          return this.sort.amountAsc
+      // 기본 날짜 오름차순
+      filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+      if (this.sort.amountAsc !== null) {
+        filtered.sort((a, b) => {
+          const amountCompare = this.sort.amountAsc
             ? a.amount - b.amount
             : b.amount - a.amount;
+
+          if (amountCompare === 0) {
+            return new Date(a.date) - new Date(b.date);
+          }
+
+          return amountCompare;
         });
+      }
+
+      return filtered;
     },
 
     incomeCount() {
@@ -225,27 +261,73 @@ export default {
       })`;
     },
     resetFilters() {
+      const today = new Date();
+      const yyyy = today.getFullYear();
+      const mm = String(today.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작
+      // 해당 월의 마지막 날 구하기
+      const lastDay = new Date(yyyy, today.getMonth() + 1, 0).getDate(); // 다음 달 0일 = 이번 달 마지막 날
+      const lastDate = String(lastDay).padStart(2, '0');
+
       this.filters = {
-        startDate: '',
-        endDate: '',
+        startDate: `${yyyy}-${mm}-01`,
+        endDate: `${yyyy}-${mm}-${lastDate}`,
         asset: '',
         type: '',
         memo: '',
       };
-      this.sort.amountAsc = true;
+
+      this.sort.amountAsc = null;
     },
     toggleAsset() {
       const assets = [...new Set(this.transactions.map((tx) => tx.asset))];
       const currentIndex = assets.indexOf(this.filters.asset);
       this.filters.asset = assets[(currentIndex + 1) % assets.length] || '';
     },
+    // 금액 정렬
     sortByAmount() {
-      this.sort.amountAsc = !this.sort.amountAsc;
+      // null → true → false → null
+      if (this.sort.amountAsc === null) {
+        this.sort.amountAsc = true;
+      } else if (!this.sort.amountAsc) {
+        this.sort.amountAsc = null;
+      } else {
+        this.sort.amountAsc = !this.sort.amountAsc;
+      }
+    },
+    exportToExcel() {
+      // 1. export할 데이터 만들기
+      const data = this.filteredTransactions.map((tx, index) => ({
+        No: index + 1,
+        날짜: this.formatDate(tx.date),
+        자산: tx.asset,
+        분류: tx.category.trim(),
+        금액: this.formatAmount(tx.amount),
+        내용: tx.memo,
+      }));
+
+      // 2. 워크시트/워크북 생성
+      const worksheet = XLSX.utils.json_to_sheet(data);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, '내역');
+
+      // 3. 파일 저장
+      const excelBuffer = XLSX.write(workbook, {
+        bookType: 'xlsx',
+        type: 'array',
+      });
+      const blob = new Blob([excelBuffer], {
+        type: 'application/octet-stream',
+      });
+      saveAs(
+        blob,
+        `MoneyCheck_거래내역_${new Date().toISOString().slice(0, 10)}.xlsx`
+      );
     },
   },
   mounted() {
     this.userId = localStorage.getItem('userId');
     this.fetchTransactions();
+    this.resetFilters();
   },
 };
 </script>
@@ -284,6 +366,9 @@ body {
   display: flex;
   align-items: center;
   min-height: 36px;
+}
+.filter span {
+  margin: 2px;
 }
 
 /* ===== 기간 필터 ===== */
@@ -399,6 +484,10 @@ table tbody tr:hover {
   table td {
     font-size: 0.85rem;
     white-space: nowrap;
+  }
+  .excel-icon:hover {
+    transform: scale(1.3);
+    transition: transform 0.03s ease-in-out;
   }
 }
 </style>

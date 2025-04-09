@@ -1,12 +1,71 @@
 {
   "users": [
     {
+      "id": "d06a",
+      "email": "OreO@naver.com",
+      "password": "1234",
+      "nickname": "오레오",
       "transactions": [
         {
           "type": "income",
-          "amount": 100000,
-          "category": "상여",
+          "amount": 3000000,
+          "category": "월급",
+          "asset": "현금",
+          "memo": "",
+          "date": "2025-03-31T15:00:00.000Z",
+          "transactionId": 101
+        },
+        {
+          "type": "expense",
+          "amount": 400000,
+          "category": "공과금/주거",
+          "asset": "현금",
+          "memo": "월세",
+          "date": "2025-03-31T15:00:00.000Z",
+          "transactionId": 102
+        },
+        {
+          "type": "expense",
+          "amount": 55000,
+          "category": "교통비",
+          "asset": "현금",
+          "memo": "기후동행카드 충전",
+          "date": "2025-04-05T15:00:00.000Z",
+          "transactionId": 103
+        },
+        {
+          "type": "expense",
+          "amount": 9000,
+          "category": "식비",
           "asset": "카드",
+          "memo": "점심",
+          "date": "2025-04-01T15:00:00.000Z",
+          "transactionId": 104
+        },
+        {
+          "type": "expense",
+          "amount": 12000,
+          "category": "문화생활",
+          "asset": "카드",
+          "memo": "영화 관람",
+          "date": "2025-04-04T15:00:00.000Z",
+          "transactionId": 105
+        },
+        {
+          "type": "income",
+          "amount": 100000,
+          "category": "용돈",
+          "asset": "현금",
+          "memo": "",
+          "date": "2025-04-14T15:00:00.000Z",
+          "transactionId": 106
+        },
+        {
+          "type": "expense",
+          "amount": 13000222,
+          "category": "식비",
+          "asset": "카드",
+<<<<<<< HEAD
           "memo": "1222",
           "date": "2025-05-02T15:00:00.000Z",
           "transactionId": 102
@@ -28,11 +87,44 @@
           "memo": "",
           "date": "2025-04-16T15:00:00.000Z",
           "transactionId": 104
+=======
+          "memo": "점심",
+          "date": "2025-04-08T15:00:00.000Z",
+          "transactionId": 107
+        },
+        {
+          "type": "expense",
+          "amount": 130000,
+          "category": "패션/미용",
+          "asset": "카드",
+          "memo": "미용실",
+          "date": "2025-04-17T15:00:00.000Z",
+          "transactionId": 108
+        },
+        {
+          "type": "expense",
+          "amount": 30000,
+          "category": "마트/편의점",
+          "asset": "현금",
+          "memo": "장보기",
+          "date": "2025-04-19T15:00:00.000Z",
+          "transactionId": 109
+        },
+        {
+          "type": "expense",
+          "amount": 80000,
+          "category": "통신비",
+          "asset": "카드",
+          "memo": "휴대폰 요금",
+          "date": "2025-04-21T15:00:00.000Z",
+          "transactionId": 110
+>>>>>>> main
         },
         {
           "type": "expense",
           "amount": 10000,
           "category": "식비",
+<<<<<<< HEAD
           "asset": "카드",
           "memo": "",
           "date": "2025-04-08T15:00:00.000Z",
@@ -90,25 +182,73 @@
           "asset": "카드",
           "memo": "",
           "date": "2025-03-17T15:00:00.000Z",
+=======
+          "asset": "현금",
+          "memo": "저녁",
+          "date": "2025-04-21T15:00:00.000Z",
+>>>>>>> main
           "transactionId": 111
         },
         {
           "type": "expense",
           "amount": 5000,
+<<<<<<< HEAD
           "category": "경조사/회비",
           "asset": "카드",
           "memo": "",
           "date": "2025-03-20T15:00:00.000Z",
+=======
+          "category": "마트/편의점",
+          "asset": "카드",
+          "memo": "군것질",
+          "date": "2025-04-24T15:00:00.000Z",
+>>>>>>> main
           "transactionId": 112
         },
         {
           "type": "expense",
           "amount": 5000,
+<<<<<<< HEAD
           "category": "부모님",
           "asset": "카드",
           "memo": "",
           "date": "2025-03-18T15:00:00.000Z",
           "transactionId": 113
+=======
+          "category": "마트/편의점",
+          "asset": "현금",
+          "memo": "간식",
+          "date": "2025-04-23T15:00:00.000Z",
+          "transactionId": 113
+        },
+        {
+          "type": "expense",
+          "amount": 60000,
+          "category": "공과금/주거",
+          "asset": "현금",
+          "memo": "가스비",
+          "date": "2025-04-29T15:00:00.000Z",
+          "transactionId": 114
+        },
+        {
+          "type": "income",
+          "amount": 250000,
+          "category": "부수입",
+          "asset": "카드",
+          "memo": "알바비",
+          "date": "2025-04-26T15:00:00.000Z",
+          "transactionId": 115
+        },
+        {
+          "type": "income",
+          "amount": 12000,
+          "category": "부수입",
+          "asset": "카드",
+          "memo": "",
+          "date": "2025-04-09T05:38:36.745Z",
+          "installmentMonthTotal": 0,
+          "transactionId": 116
+>>>>>>> main
         }
       ],
       "id": "d06a"

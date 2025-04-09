@@ -11,6 +11,19 @@
             <option value="income">수입</option>
           </select>
         </div>
+        <div
+          class="form-line d-flex align-items-center"
+          v-if="type === 'expense'"
+        >
+          <label class="form-label">할부</label>
+          <input
+            type="number"
+            class="form-control ms-auto"
+            v-model.number="installmentMonths"
+            placeholder="개월 수 (예: 3)"
+            min="0"
+          />
+        </div>
 
         <div class="form-line d-flex align-items-center">
           <label class="form-label">금액</label>
@@ -76,6 +89,7 @@ export default {
       category: '',
       asset: '카드',
       memo: '',
+      installmentMonths: 0,
     };
   },
 
@@ -99,39 +113,69 @@ export default {
       return removeEmoji(category);
     },
     async saveTransaction() {
-      if (!this.amount || this.amount <= 0) {
-        alert('금액을 올바르게 입력해주세요.');
-        return;
-      }
-
-      if (!this.category) {
-        alert('분류를 선택해주세요.');
-        return;
-      }
-
-      if (!this.asset) {
-        alert('자산을 선택해주세요.');
-        return;
-      }
-
-      const store = useTransactionStore();
-      const { selectedDate } = storeToRefs(store);
-      const newTransaction = {
-        type: this.type,
-        amount: this.amount,
-        category: this.removeEmoji(this.category),
-        asset: this.asset,
-        memo: this.memo,
-        date: selectedDate.value.toISOString(),
-      };
-
       try {
-        await store.addTransaction(newTransaction);
+        if (!this.amount || this.amount <= 0) {
+          alert('금액을 올바르게 입력해주세요.');
+          return;
+        }
+
+        if (!this.category) {
+          alert('분류를 선택해주세요.');
+          return;
+        }
+
+        if (!this.asset) {
+          alert('자산을 선택해주세요.');
+          return;
+        }
+
+        const store = useTransactionStore();
+        const { selectedDate } = storeToRefs(store);
+        const baseDate = new Date(selectedDate.value);
+        const months = this.installmentMonths || 0;
+
+        if (this.type === 'income' || months <= 1) {
+          const newTransaction = {
+            type: this.type,
+            amount: this.amount,
+            category: this.removeEmoji(this.category),
+            asset: this.asset,
+            memo: this.memo,
+            date: selectedDate.value.toISOString(),
+            installmentMonthTotal: 0,
+          };
+          await store.addTransaction(newTransaction);
+        } else {
+          const totalAmount = this.amount;
+          const baseAmount = Math.floor(totalAmount / months);
+          const remainder = totalAmount % months;
+
+          for (let i = 0; i < months; i++) {
+            const installmentDate = new Date(baseDate);
+            installmentDate.setMonth(baseDate.getMonth() + i);
+
+            const amountThisMonth =
+              i === months - 1 ? baseAmount + remainder : baseAmount;
+
+            const newTransaction = {
+              type: this.type,
+              amount: amountThisMonth,
+              category: this.removeEmoji(this.category),
+              asset: this.asset,
+              memo: `${this.memo} (${i + 1}개월차 할부)`,
+              date: installmentDate.toISOString(),
+              installmentMonthTotal: months,
+            };
+
+            await store.addTransaction(newTransaction);
+          }
+        }
+
         await store.fetchTransactions();
         this.$emit('close');
-      } catch (err) {
-        console.error('저장 실패:', err);
-        alert('저장 중 오류가 발생했습니다. 다시 시도해주세요.');
+      } catch (e) {
+        console.error('[저장 실패]', e);
+        alert('트랜잭션 저장 중 오류가 발생했습니다.');
       }
     },
   },
