@@ -20,7 +20,7 @@
       <option value="profit">최근 3개월 순이익</option>
       <option value="expense-3m">최근 3개월 지출</option>
       <option value="income-3m">최근 3개월 수입</option>
-      <option value="expense-compare">전월 비교 지출</option>
+      <option value="expense-compare">전월 지출 비교</option>
     </select>
   </div>
 
@@ -194,8 +194,10 @@ const stackedBarChartOptions = {
         const total = ctx.chart.data.datasets
           .map((ds) => ds.data[dataIndex])
           .reduce((a, b) => a + b, 0);
-        const percentage = total ? ((value / total) * 100).toFixed(0) : 0;
-        return value === 0 ? '' : `${percentage}%`;
+        const percentage = total ? ((value / total) * 100).toFixed(1) : 0;
+
+        return percentage < 1 ? '' : `${percentage}%`;
+        // return value === 0 ? '' : `${percentage}%`;
       },
       color: '#F5F5F5',
       font: { weight: 'normal', size: 10 },
@@ -452,11 +454,31 @@ const loadExpenseCompareData = (transactions) => {
     }
   });
 
+  // chartData.value.labels = [`${prev.month}월`, `${current.month}월`];
+  // chartData.value.datasets = expenseCategories.map((cat, idx) => ({
+  //   label: cat,
+  //   data: [dataPrev[cat], dataCurrent[cat]],
+  //   backgroundColor: chartColors[idx % chartColors.length],
+  //   stack: 'stack1',
+  // }));
+
+  // 전월 + 당월 합산 금액 기준으로 정렬
+  const sorted = expenseCategories
+    .map((cat, idx) => ({
+      label: cat,
+      data: [dataPrev[cat], dataCurrent[cat]],
+      total: dataPrev[cat] + dataCurrent[cat],
+      color: chartColors[idx % chartColors.length],
+    }))
+    .filter((d) => d.total > 0)
+    .sort((a, b) => b.total - a.total);
+
   chartData.value.labels = [`${prev.month}월`, `${current.month}월`];
-  chartData.value.datasets = expenseCategories.map((cat, idx) => ({
-    label: cat,
-    data: [dataPrev[cat], dataCurrent[cat]],
-    backgroundColor: chartColors[idx % chartColors.length],
+
+  chartData.value.datasets = sorted.map((d) => ({
+    label: d.label,
+    data: d.data,
+    backgroundColor: d.color,
     stack: 'stack1',
   }));
 
@@ -528,5 +550,6 @@ watch(
   position: relative;
   background-color: #ffffff;
   border-radius: 15px;
+  padding: 20px 10px;
 }
 </style>
