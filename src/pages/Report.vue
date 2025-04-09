@@ -1,5 +1,26 @@
 <template>
   <div class="container p-2 justify-content-center align-items-center">
+    <!-- 총합(전체, 수입, 지출) -->
+    <div class="summary-cards mb-4">
+      <div class="card summary-card">
+        <div class="card-body">
+          <div class="summary-item">
+            <h6 class="text-secondary">전체</h6>
+            <p class="amount text-secondary">
+              ₩{{ formatAmount(totalAmount) }}
+            </p>
+          </div>
+          <div class="summary-item">
+            <h6 class="text-secondary">지출</h6>
+            <p class="amount text-danger">₩{{ formatAmount(expenseTotal) }}</p>
+          </div>
+          <div class="summary-item">
+            <h6 class="text-secondary">수입</h6>
+            <p class="amount text-success">₩{{ formatAmount(incomeTotal) }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
     <!-- 검색 결과 헤더 -->
     <div class="d-flex align-items-center mb-3">
       <span class="me-2 fw-semibold text-secondary">검색 결과 :</span>
@@ -86,22 +107,6 @@
           </button>
         </span>
       </div>
-    </div>
-
-    <!-- 총합(전체, 수입, 지출) -->
-    <div class="total d-flex justify-content-center gap-2 flex-wrap my-3">
-      <span class="bg-secondary text-white">
-        전체({{ filteredTransactions.length }})<br />
-        <b>{{ formatAmount(totalAmount) }} 원</b>
-      </span>
-      <span class="bg-success text-white">
-        수입({{ incomeCount }})<br />
-        <b>{{ formatAmount(incomeTotal) }} 원</b>
-      </span>
-      <span class="bg-danger text-white">
-        지출({{ expenseCount }})<br />
-        <b>{{ formatAmount(expenseTotal) }} 원</b>
-      </span>
     </div>
 
     <!-- 테이블 -->
@@ -489,5 +494,60 @@ table tbody tr:hover {
     transform: scale(1.3);
     transition: transform 0.03s ease-in-out;
   }
+}
+.card {
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  background: #fff;
+  margin-bottom: 20px;
+  /* justify-content: space-between; */
+}
+.summary-cards {
+  background: #f9fafb;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.summary-card {
+  border-radius: 8px;
+  border: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+.summary-card .card-body {
+  display: flex;
+  justify-content: space-between; /* 항목 사이에 일정한 간격을 두기 */
+  padding: 10px 15px; /* 여백 추가 */
+}
+.no-wrap {
+  white-space: nowrap; /* 줄바꿈 방지 */
+}
+
+.summary-item {
+  flex: 1;
+  text-align: center;
+  padding: 10 15px;
+}
+
+.summary-item h6 {
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.summary-item .amount {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 0;
+}
+.text-secondary {
+  color: #7c7c7c !important;
+}
+
+.text-danger {
+  color: #fd4ca7 !important;
+}
+
+.text-success {
+  color: #01c12b !important;
 }
 </style>
