@@ -38,10 +38,16 @@
     <!-- 필터 영역 -->
     <div class="filter">
       <!-- 기간 필터 -->
+      <!-- 기간 필터 -->
       <span class="period-filter bg-box">
         기간 :
         <input type="date" v-model="filters.startDate" class="period" /> ~
-        <input type="date" v-model="filters.endDate" class="period" />
+        <input
+          type="date"
+          v-model="filters.endDate"
+          class="period"
+          :min="filters.startDate"
+        />
       </span>
 
       <!-- 자산 필터 -->
@@ -80,7 +86,6 @@
 
       <!-- 메모 검색 -->
       <span class="bg-box">
-        <i class="fa-solid fa-magnifying-glass"></i>
         <input
           v-model="filters.memo"
           type="text"
@@ -104,6 +109,15 @@
             height="24"
             class="excel-icon"
           />
+        </button>
+      </span>
+      <span>
+        <button
+          class="btn btn-outline-info"
+          @click="showReportCard = !showReportCard"
+          aria-label="Toggle image card view"
+        >
+          📸 이미지 카드
         </button>
       </span>
       <span>
@@ -141,13 +155,48 @@
       </tbody>
     </table>
   </div>
+  <MonthlyReportCard
+    v-if="showReportCard"
+    :transactions="filteredTransactions"
+    :expenseTotal="expenseTotal"
+    @close="showReportCard = false"
+  />
 </template>
 
 <script>
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
+import MonthlyReportCard from '@/components/report/MonthlyReportCard.vue';
+import { storeToRefs } from 'pinia';
+import { useTransactionStore } from '@/stores/transaction';
+
 const minimumWage = 10030;
+const store = useTransactionStore();
+const { transactions } = storeToRefs(store);
+
 export default {
+  setup() {
+    const store = useTransactionStore();
+    const { transactions } = storeToRefs(store);
+    return { transactions };
+  },
+  watch: {
+    'filters.startDate'(newDate) {
+      if (newDate && this.filters.endDate === '') {
+        const date = new Date(newDate);
+        const yyyy = date.getFullYear();
+        const mm = String(date.getMonth() + 1).padStart(2, '0');
+        const lastDay = new Date(yyyy, date.getMonth() + 1, 0).getDate();
+        const lastDate = String(lastDay).padStart(2, '0');
+
+        this.filters.startDate = `${yyyy}-${mm}-01`;
+        this.filters.endDate = `${yyyy}-${mm}-${lastDate}`;
+      }
+    },
+  },
+  components: {
+    MonthlyReportCard,
+  },
   name: 'ReportPage',
   data() {
     return {
@@ -163,6 +212,7 @@ export default {
       sort: {
         amountAsc: null, // 금액 정렬
       },
+      showReportCard: false,
     };
   },
   computed: {
@@ -369,7 +419,7 @@ body {
   border-radius: 16px;
   padding: 24px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  max-width: 1200px;
+  max-width: 100%;
   margin: 0 auto;
   font-family: 'Noto Sans KR', sans-serif;
 }
@@ -379,7 +429,7 @@ body {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 12px;
+  gap: 6px;
   padding: 16px;
   background-color: #fff;
   border-radius: 12px;
@@ -467,7 +517,7 @@ body {
   border-radius: 12px;
   overflow-x: auto;
   width: 100%;
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
 }
 table {
