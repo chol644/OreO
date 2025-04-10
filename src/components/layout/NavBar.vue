@@ -28,27 +28,21 @@
         @click="toggleProfileMenu"
         style="cursor: pointer; font-size: 24px"
       ></i>
-      <div v-if="showProfileMenu" class="profile-dropdown">
-        <div class="d-flex flex-column mb-2">
-          <!-- 닉네임과 이메일을 줄바꿈을 해서 보이도록 처리 -->
-          <p class="mb-1 text-truncate">
-            <strong>닉네임:</strong> {{ userNickname }}
-          </p>
-          <p class="mb-1 text-truncate">
-            <strong>이메일:</strong> {{ userEmail }}
-          </p>
+      <!-- 드롭다운 -->
+      <div v-if="showProfileMenu" class="profile-dropdown shadow-lg">
+        <div class="user-info d-flex align-items-center gap-3 mb-3">
+          <i class="bi bi-person-circle fs-2 text-primary"></i>
+          <div class="text-start">
+            <div class="fw-semibold fs-6 text-dark">{{ userNickname }}</div>
+            <div class="text-muted small">{{ userEmail }}</div>
+          </div>
         </div>
-        <button
-          class="btn btn-outline-primary btn-sm w-100 mt-2"
-          @click="goToProfileEdit"
-        >
-          내 정보 수정
+        <hr />
+        <button class="btn profile-btn w-100" @click="goToProfileEdit">
+          ✏️ 내 정보 수정
         </button>
-        <button
-          class="btn btn-outline-primary btn-sm w-100 mt-2"
-          @click="logout"
-        >
-          로그아웃
+        <button class="btn profile-btn w-100" @click="logout">
+          🔒 로그아웃
         </button>
       </div>
     </div>
@@ -162,14 +156,31 @@ export default {
 
 .profile-dropdown {
   position: absolute;
-  top: 30px;
+  top: 35px;
   right: 0;
-  background-color: white;
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 16px;
+  width: 260px;
+  z-index: 999;
   border: 1px solid #ddd;
-  padding: 15px;
-  width: 250px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  z-index: 10;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease-in-out;
+}
+.profile-btn {
+  background-color: #e0f0ff;
+  color: #0077b6;
+  border: 1px solid #bde0fe;
+  font-weight: 500;
+  font-size: 14px;
+  padding: 8px;
+  transition: background-color 0.2s ease;
+  margin-top: 8px;
+}
+
+.profile-btn:hover {
+  background-color: #cde9ff;
+  color: #005f99;
 }
 
 .profile-dropdown p {
@@ -178,17 +189,7 @@ export default {
   white-space: normal;
 }
 
-.profile-dropdown button {
-  width: 100%;
-  padding: 8px;
-  background-color: #ceecff;
-  border: none;
-  cursor: pointer;
-  font-weight: bold;
-  margin-top: 10px;
-}
-
-.profile-dropdown button:hover {
-  background-color: #a9d8f4;
+.user-info .text-muted {
+  font-size: 0.85rem;
 }
 </style>
