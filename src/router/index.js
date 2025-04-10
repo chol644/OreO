@@ -52,6 +52,11 @@ const router = createRouter({
       component: () => import('@/pages/news/EconomyNews.vue'),
     },
     {
+      path: '/exchange',
+      name: 'Exchange',
+      component: () => import('@/pages/exchange/ExchangeCalculator.vue'),
+    },
+    {
       path: '/:pathMatch(.*)*',
       name: 'NotFound',
       component: () => import('@/pages/NotFound.vue'),
