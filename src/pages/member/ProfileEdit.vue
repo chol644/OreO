@@ -102,6 +102,8 @@ import { ref, reactive, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
 import { useAuthStore } from '@/stores/auth';
+import { showAlert } from '@/utils/alert';
+
 const authStore = useAuthStore(); // ✅ 2단계: 선언
 
 // --- Router & State ---
@@ -194,7 +196,10 @@ const handleUpdateProfile = async () => {
         ...authStore.user,
         nickname: response.data.nickname,
       });
-      alert('프로필 정보가 성공적으로 수정되었습니다.');
+      showAlert({
+        title: '회원정보 수정',
+        text: '프로필 정보가 성공적으로 수정되었습니다.',
+      });
       router.push('/'); // Navigate to home or profile view page
     } else {
       throw new Error(`Unexpected response status: ${response.status}`);
@@ -221,7 +226,11 @@ const cancelEdit = () => {
   errorMessage.value = null; // Clear any previous error
   // Optional: Navigate back
   // router.go(-1);
-  alert('수정이 취소되었습니다.'); // Or navigate silently
+  showAlert({
+    // Or navigate silently
+    title: '회원정보 수정',
+    text: '수정이 취소되었습니다.',
+  });
 };
 </script>
 
