@@ -19,7 +19,7 @@
             <p class="amount text-success">₩{{ formatAmount(incomeTotal) }}</p>
           </div>
           <div class="summary-item">
-            <h6 class="text-secondary">사용한 돈의 시간 가치</h6>
+            <h6 class="text-secondary">사용한 돈의 시간 값</h6>
             <p class="amount text-warning">
               {{ getTimeValue(expenseTotal) }}
             </p>
@@ -29,34 +29,25 @@
     </div>
     <!-- 검색 결과 헤더 -->
     <div class="d-flex align-items-center m-3">
-      <span class="me-2 fw-semibold text-secondary">💡 검색 결과 :</span>
+      <span class="me-2 fw-semibold text-secondary">:전구: 검색 결과 :</span>
       <span class="badge bg-primary fs-6"
-        >{{ filteredTransactions.length }} 건</span
+        >{{ filteredTransactions.length }} 개</span
       >
     </div>
-
     <!-- 필터 영역 -->
     <div class="filter">
-      <!-- 기간 필터 -->
       <!-- 기간 필터 -->
       <span class="period-filter bg-box">
         기간 :
         <input type="date" v-model="filters.startDate" class="period" /> ~
-        <input
-          type="date"
-          v-model="filters.endDate"
-          class="period"
-          :min="filters.startDate"
-        />
+        <input type="date" v-model="filters.endDate" class="period" />
       </span>
-
-      <!-- 자산 필터 -->
+      <!-- 자사필터 -->
       <span>
         <button class="btn btn-outline-dark bg-light" @click="toggleAsset">
-          자산: {{ filters.asset || '전체' }}
+          자사: {{ filters.asset || '전체' }}
         </button>
       </span>
-
       <!-- 분류 필터 -->
       <span>
         <button
@@ -74,8 +65,7 @@
           수입
         </button>
       </span>
-
-      <!-- 금액 오름순/내림순 -->
+      <!-- 금액 정렬 -->
       <span>
         <button class="btn btn-outline-dark bg-light" @click="sortByAmount">
           금액
@@ -83,24 +73,23 @@
           <span v-else-if="sort.amountAsc === false">▼</span>
         </button>
       </span>
-
       <!-- 메모 검색 -->
       <span class="bg-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
         <input
           v-model="filters.memo"
           type="text"
           class="inputMemo"
-          placeholder="🔍 내용 또는 메모"
+          placeholder=":돋보기: 내용 또는 메모"
         />
       </span>
-
-      <!-- 엑셀 다운로드 아이콘 -->
+      <!-- 에크셀 다운로드 -->
       <span>
         <button
           class="btn btn-outline-success d-flex justify-content-center align-items-center p-0"
           @click="exportToExcel"
           style="width: 40px; height: 40px"
-          title="엑셀 다운로드"
+          title="에크셀 다운로드"
         >
           <img
             src="@/assets/excel_icon.png"
@@ -112,22 +101,12 @@
         </button>
       </span>
       <span>
-        <button
-          class="btn btn-outline-info"
-          @click="showReportCard = !showReportCard"
-          aria-label="Toggle image card view"
-        >
-          📸 이미지 카드
-        </button>
-      </span>
-      <span>
         <button class="btn btn-outline-primary" @click="resetFilters">
           초기화
         </button>
       </span>
     </div>
   </div>
-
   <!-- 테이블 -->
   <div class="table-responsive rounded shadow-sm overflow-hidden">
     <table
@@ -135,12 +114,12 @@
     >
       <thead class="table-light">
         <tr>
-          <th scope="col">No.</th>
-          <th scope="col">날짜</th>
-          <th scope="col">자산</th>
-          <th scope="col">분류</th>
-          <th scope="col">금액</th>
-          <th scope="col">내용</th>
+          <th>No.</th>
+          <th>날짜</th>
+          <th>자사</th>
+          <th>분류</th>
+          <th>금액</th>
+          <th>내용</th>
         </tr>
       </thead>
       <tbody>
@@ -155,256 +134,132 @@
       </tbody>
     </table>
   </div>
-  <MonthlyReportCard
-    v-if="showReportCard"
-    :transactions="filteredTransactions"
-    :expenseTotal="expenseTotal"
-    @close="showReportCard = false"
-  />
 </template>
-
-<script>
+<script setup>
+import { ref, computed, onMounted } from 'vue';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
-import MonthlyReportCard from '@/components/report/MonthlyReportCard.vue';
-import { storeToRefs } from 'pinia';
 import { useTransactionStore } from '@/stores/transaction';
-
 const minimumWage = 10030;
 const store = useTransactionStore();
-const { transactions } = storeToRefs(store);
-
-export default {
-  setup() {
-    const store = useTransactionStore();
-    const { transactions } = storeToRefs(store);
-    return { transactions };
-  },
-  watch: {
-    'filters.startDate'(newDate) {
-      if (newDate && this.filters.endDate === '') {
-        const date = new Date(newDate);
-        const yyyy = date.getFullYear();
-        const mm = String(date.getMonth() + 1).padStart(2, '0');
-        const lastDay = new Date(yyyy, date.getMonth() + 1, 0).getDate();
-        const lastDate = String(lastDay).padStart(2, '0');
-
-        this.filters.startDate = `${yyyy}-${mm}-01`;
-        this.filters.endDate = `${yyyy}-${mm}-${lastDate}`;
-      }
-    },
-  },
-  components: {
-    MonthlyReportCard,
-  },
-  name: 'ReportPage',
-  data() {
-    return {
-      userId: 'yerin01',
-      filters: {
-        startDate: '',
-        endDate: '',
-        asset: '',
-        type: '', // 'income' or 'expense'
-        memo: '',
-      },
-      sort: {
-        amountAsc: null, // 금액 정렬
-      },
-      showReportCard: false,
-    };
-  },
-  computed: {
-    // 날짜 필터링
-    filteredTransactions() {
-      const clearTime = (date) => {
-        const d = new Date(date);
-        d.setHours(0, 0, 0, 0); // 시간 00:00으로 초기화
-        return d;
-      };
-
-      const filtered = this.transactions.filter((tx) => {
-        const txDate = clearTime(tx.date);
-        const start = this.filters.startDate
-          ? clearTime(this.filters.startDate)
-          : null;
-        const end = this.filters.endDate
-          ? clearTime(this.filters.endDate)
-          : null;
-
-        return (
-          (!start || txDate >= start) &&
-          (!end || txDate <= end) &&
-          (!this.filters.asset || tx.asset === this.filters.asset) &&
-          (!this.filters.type || tx.type === this.filters.type) &&
-          (!this.filters.memo || tx.memo.includes(this.filters.memo))
-        );
-      });
-
-      // 기본 날짜 오름차순
-      filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
-
-      if (this.sort.amountAsc !== null) {
-        filtered.sort((a, b) => {
-          const amountCompare = this.sort.amountAsc
-            ? a.amount - b.amount
-            : b.amount - a.amount;
-
-          if (amountCompare === 0) {
-            return new Date(a.date) - new Date(b.date);
-          }
-
-          return amountCompare;
-        });
-      }
-
-      return filtered;
-    },
-
-    incomeCount() {
-      // 수입 카운트
-      return this.filteredTransactions.filter((tx) => tx.type === 'income')
-        .length;
-    },
-    expenseCount() {
-      // 지출 카운트
-      return this.filteredTransactions.filter((tx) => tx.type === 'expense')
-        .length;
-    },
-    incomeTotal() {
-      // 수입 총합
-      return this.filteredTransactions
-        .filter((tx) => tx.type === 'income')
-        .reduce((sum, tx) => sum + tx.amount, 0);
-    },
-    expenseTotal() {
-      // 지출 총합
-      return this.filteredTransactions
-        .filter((tx) => tx.type === 'expense')
-        .reduce((sum, tx) => sum + tx.amount, 0);
-    },
-    totalAmount() {
-      // 총 합계
-      return this.incomeTotal - this.expenseTotal;
-    },
-  },
-  methods: {
-    getTimeValue(amount) {
-      // 시간 가치 계산 (총 시간)
-      const totalHours = amount / minimumWage;
-
-      // 시간과 분으로 변환
-      const hours = Math.floor(totalHours); // 정수 시간
-      const minutes = Math.round((totalHours - hours) * 60); // 남은 시간을 분으로 환산 후 반올림
-
-      // 결과 문자열 생성
-      let resultString = '';
-      if (hours > 0) {
-        resultString += `${hours}시간 `;
-      }
-      if (minutes > 0) {
-        resultString += ` ${minutes}분`;
-      }
-
-      return resultString;
-    },
-    fetchTransactions() {
-      fetch('/api/users')
-        .then((res) => res.json())
-        .then((users) => {
-          const user = users.find((u) => u.id?.trim() === this.userId?.trim());
-          if (user && user.transactions) {
-            this.transactions = user.transactions;
-          } else {
-            alert('해당 사용자 또는 거래내역이 없습니다.');
-          }
-        })
-        .catch((err) => {
-          console.error('데이터 로드 실패:', err);
-        });
-    },
-    formatAmount(amount) {
-      return Number(amount).toLocaleString();
-    },
-    formatDate(dateStr) {
-      const date = new Date(dateStr);
-      const week = ['일', '월', '화', '수', '목', '금', '토'];
-      return `${date.getFullYear().toString().slice(2)}.${String(
-        date.getMonth() + 1
-      ).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')} (${
-        week[date.getDay()]
-      })`;
-    },
-    resetFilters() {
-      const today = new Date();
-      const yyyy = today.getFullYear();
-      const mm = String(today.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작
-      // 해당 월의 마지막 날 구하기
-      const lastDay = new Date(yyyy, today.getMonth() + 1, 0).getDate(); // 다음 달 0일 = 이번 달 마지막 날
-      const lastDate = String(lastDay).padStart(2, '0');
-
-      this.filters = {
-        startDate: `${yyyy}-${mm}-01`,
-        endDate: `${yyyy}-${mm}-${lastDate}`,
-        asset: '',
-        type: '',
-        memo: '',
-      };
-
-      this.sort.amountAsc = null;
-    },
-    toggleAsset() {
-      const assets = [...new Set(this.transactions.map((tx) => tx.asset))];
-      const currentIndex = assets.indexOf(this.filters.asset);
-      this.filters.asset = assets[(currentIndex + 1) % assets.length] || '';
-    },
-    // 금액 정렬
-    sortByAmount() {
-      // null → true → false → null
-      if (this.sort.amountAsc === null) {
-        this.sort.amountAsc = true;
-      } else if (!this.sort.amountAsc) {
-        this.sort.amountAsc = null;
-      } else {
-        this.sort.amountAsc = !this.sort.amountAsc;
-      }
-    },
-    exportToExcel() {
-      // 1. export할 데이터 만들기
-      const data = this.filteredTransactions.map((tx, index) => ({
-        No: index + 1,
-        날짜: this.formatDate(tx.date),
-        자산: tx.asset,
-        분류: tx.category.trim(),
-        금액: this.formatAmount(tx.amount),
-        내용: tx.memo,
-      }));
-
-      // 2. 워크시트/워크북 생성
-      const worksheet = XLSX.utils.json_to_sheet(data);
-      const workbook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(workbook, worksheet, '내역');
-
-      // 3. 파일 저장
-      const excelBuffer = XLSX.write(workbook, {
-        bookType: 'xlsx',
-        type: 'array',
-      });
-      const blob = new Blob([excelBuffer], {
-        type: 'application/octet-stream',
-      });
-      saveAs(
-        blob,
-        `MoneyCheck_거래내역_${new Date().toISOString().slice(0, 10)}.xlsx`
-      );
-    },
-  },
-  mounted() {
-    this.userId = localStorage.getItem('userId');
-    this.fetchTransactions();
-    this.resetFilters();
-  },
+const filters = ref({
+  startDate: '',
+  endDate: '',
+  asset: '',
+  type: '',
+  memo: '',
+});
+const sort = ref({ amountAsc: null });
+const formatAmount = (amount) => Number(amount).toLocaleString();
+const formatDate = (dateStr) => {
+  const date = new Date(dateStr);
+  const week = ['일', '월', '화', '수', '목', '금', '토'];
+  return `${date.getFullYear().toString().slice(2)}.${String(
+    date.getMonth() + 1
+  ).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')} (${
+    week[date.getDay()]
+  })`;
 };
+const getTimeValue = (amount) => {
+  const totalHours = amount / minimumWage;
+  const hours = Math.floor(totalHours);
+  const minutes = Math.round((totalHours - hours) * 60);
+  return `${hours > 0 ? hours + '시간 ' : ''}${
+    minutes > 0 ? minutes + '분' : ''
+  }`;
+};
+const filteredTransactions = computed(() => {
+  const clearTime = (date) => {
+    const d = new Date(date);
+    d.setHours(0, 0, 0, 0);
+    return d;
+  };
+  return store.transactions
+    .filter((tx) => {
+      const txDate = clearTime(tx.date);
+      const start = filters.value.startDate
+        ? clearTime(filters.value.startDate)
+        : null;
+      const end = filters.value.endDate
+        ? clearTime(filters.value.endDate)
+        : null;
+      return (
+        (!start || txDate >= start) &&
+        (!end || txDate <= end) &&
+        (!filters.value.asset || tx.asset === filters.value.asset) &&
+        (!filters.value.type || tx.type === filters.value.type) &&
+        (!filters.value.memo || tx.memo.includes(filters.value.memo))
+      );
+    })
+    .sort((a, b) => {
+      const baseSort = new Date(a.date) - new Date(b.date);
+      if (sort.value.amountAsc === null) return baseSort;
+      const amountCompare = sort.value.amountAsc
+        ? a.amount - b.amount
+        : b.amount - a.amount;
+      return amountCompare === 0 ? baseSort : amountCompare;
+    });
+});
+const incomeTotal = computed(() =>
+  filteredTransactions.value
+    .filter((tx) => tx.type === 'income')
+    .reduce((sum, tx) => sum + tx.amount, 0)
+);
+const expenseTotal = computed(() =>
+  filteredTransactions.value
+    .filter((tx) => tx.type === 'expense')
+    .reduce((sum, tx) => sum + tx.amount, 0)
+);
+const totalAmount = computed(() => incomeTotal.value - expenseTotal.value);
+const resetFilters = () => {
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth() + 1).padStart(2, '0');
+  const lastDate = String(
+    new Date(yyyy, today.getMonth() + 1, 0).getDate()
+  ).padStart(2, '0');
+  filters.value = {
+    startDate: `${yyyy}-${mm}-01`,
+    endDate: `${yyyy}-${mm}-${lastDate}`,
+    asset: '',
+    type: '',
+    memo: '',
+  };
+  sort.value.amountAsc = null;
+};
+const toggleAsset = () => {
+  const assets = [...new Set(store.transactions.map((tx) => tx.asset))];
+  const currentIndex = assets.indexOf(filters.value.asset);
+  filters.value.asset = assets[(currentIndex + 1) % assets.length] || '';
+};
+const sortByAmount = () => {
+  if (sort.value.amountAsc === null) sort.value.amountAsc = true;
+  else if (!sort.value.amountAsc) sort.value.amountAsc = null;
+  else sort.value.amountAsc = false;
+};
+const exportToExcel = () => {
+  const data = filteredTransactions.value.map((tx, index) => ({
+    No: index + 1,
+    날짜: formatDate(tx.date),
+    자사: tx.asset,
+    분류: tx.category.trim(),
+    금액: formatAmount(tx.amount),
+    내용: tx.memo,
+  }));
+  const worksheet = XLSX.utils.json_to_sheet(data);
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, '내역');
+  const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+  const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+  saveAs(
+    blob,
+    `MoneyCheck_거래내역_${new Date().toISOString().slice(0, 10)}.xlsx`
+  );
+};
+onMounted(() => {
+  store.fetchTransactions();
+  resetFilters();
+});
 </script>
 
 <style scoped>
