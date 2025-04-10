@@ -34,7 +34,11 @@
           selectedOption === 'income-compare'
         "
       >
-        {{ currentYear }}년 {{ currentMonth - 1 }}월 vs {{ currentMonth }}월
+        {{
+          currentMonth === 1
+            ? `${currentYear - 1}년 12월 vs ${currentYear}년 1월`
+            : `${currentYear}년 ${currentMonth - 1}월 vs ${currentMonth}월`
+        }}
         {{ selectedOption === 'income-compare' ? '수입' : '지출' }} 비교
       </template>
       <template v-else>
@@ -122,9 +126,9 @@ import {
   BarElement,
 } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import DoughnutChart from '@/pages/ChartVIew/components/DoughnutChart.vue';
-import LineChart from '@/pages/ChartVIew/components/LineChart.vue';
-import BarChart from '@/pages/ChartVIew/components/StackedBarChart.vue';
+import DoughnutChart from '@/components/chart/DoughnutChart.vue';
+import LineChart from '@/components/chart/LineChart.vue';
+import BarChart from '@/components/chart/StackedBarChart.vue';
 import { useAuthStore } from '@/stores/auth';
 import { useTransactionStore } from '@/stores/transaction';
 import {
@@ -170,7 +174,7 @@ const optionText = computed(
       'income-3m': '최근 3개월 수입',
       'expense-compare': '전월 비교 지출',
       'income-compare': '전월 비교 수입',
-    })[selectedOption.value]
+    }[selectedOption.value])
 );
 
 const isSameMonth = (dateStr, year, month) => {
@@ -662,9 +666,7 @@ watch(
   display: flex;
   justify-content: center;
   align-items: center;
-  transition:
-    background-color 0.3s,
-    box-shadow 0.3s;
+  transition: background-color 0.3s, box-shadow 0.3s;
   cursor: pointer;
 }
 

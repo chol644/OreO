@@ -49,7 +49,7 @@ const router = createRouter({
     {
       path: '/chart',
       name: 'Chart',
-      component: () => import('@/pages//ChartVIew/ChartView.vue'),
+      component: () => import('@/pages/chart/Chart.vue'),
     },
     {
       path: '/news',
