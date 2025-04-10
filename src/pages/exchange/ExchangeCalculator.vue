@@ -13,7 +13,6 @@
           <ExchangeDropdown
             v-model="targetCurrency"
             :currencyList="currencyList"
-            class="form-select"
           />
         </div>
         <div v-else>
@@ -26,7 +25,7 @@
         </div>
       </div>
 
-      <!-- 전환 아이콘 -->
+      <!-- 아이콘 -->
       <div class="col-auto">
         <button
           class="btn btn-outline-secondary btn-sm rounded-circle border-0 swap-btn"
@@ -50,10 +49,12 @@
             placeholder="금액 입력"
           />
         </div>
-        <ExchangeDropdown
-          v-model="targetCurrency"
-          :currencyList="currencyList"
-        />
+        <div v-else>
+          <ExchangeDropdown
+            v-model="targetCurrency"
+            :currencyList="currencyList"
+          />
+        </div>
       </div>
     </div>
 
