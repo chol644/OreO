@@ -90,34 +90,27 @@
       </span>
 
       <!-- 엑셀 다운로드 아이콘 -->
-      <div class="w-100">
-        <!--d-flex justify-content-center-->
-        <span
+      <span>
+        <button
+          class="btn btn-outline-success d-flex justify-content-center align-items-center p-0"
           @click="exportToExcel"
-          class="btn float-end btn-outline-success ms-auto d-flex justify-content-center align-items-center p-0"
           style="width: 40px; height: 40px"
+          title="엑셀 다운로드"
         >
           <img
             src="@/assets/excel_icon.png"
-            title="엑셀 다운로드"
             alt="Excel 다운로드"
             width="24"
             height="24"
             class="excel-icon"
-            style="display: block; margin: auto"
           />
-        </span>
-
-        <!-- 초기화 -->
-        <span>
-          <button
-            class="btn btn-outline-primary float-end"
-            @click="resetFilters"
-          >
-            초기화
-          </button>
-        </span>
-      </div>
+        </button>
+      </span>
+      <span>
+        <button class="btn btn-outline-primary" @click="resetFilters">
+          초기화
+        </button>
+      </span>
     </div>
   </div>
 
@@ -376,7 +369,7 @@ body {
   border-radius: 16px;
   padding: 24px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  max-width: 1000px;
+  max-width: 1200px;
   margin: 0 auto;
   font-family: 'Noto Sans KR', sans-serif;
 }
@@ -399,6 +392,7 @@ body {
   display: flex;
   align-items: center;
   min-height: 36px;
+  justify-content: flex-start; /* ← 왼쪽 정렬 */
 }
 .filter span {
   margin: 2px;
@@ -472,18 +466,49 @@ body {
 .table-responsive {
   border-radius: 12px;
   overflow-x: auto;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 table {
-  background-color: white;
+  background-color: #fff;
+  border-collapse: collapse;
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
 }
+
+table thead {
+  background-color: #f8f9fa;
+}
+
 table th,
 table td {
-  vertical-align: middle !important;
-  padding: 12px;
+  padding: 12px 14px;
+  font-size: 0.92rem;
+  color: #343a40;
+  border: 1px solid #dee2e6;
 }
-table tbody tr:hover {
+
+table thead th {
+  font-weight: 600;
   background-color: #f1f3f5;
-  transition: background-color 0.2s ease;
+}
+
+table tbody tr:hover {
+  background-color: #f6f8fa;
+}
+
+/* 반응형 유지 */
+.table-responsive {
+  overflow-x: auto;
+  border-radius: 12px;
+  background-color: #ffffff;
+  padding: 10px;
+}
+table tbody tr:nth-child(even) {
+  background-color: #fafbfc;
 }
 
 .excel-icon:hover {

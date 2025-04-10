@@ -37,6 +37,11 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
+      path: '/cards',
+      name: 'Cards',
+      component: () => import('@/pages/card/CardPage.vue'), // 경로 확인
+    },
+    {
       path: '/report',
       name: 'Report',
       component: () => import('@/pages/Report.vue'),
