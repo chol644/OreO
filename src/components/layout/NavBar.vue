@@ -5,46 +5,62 @@
       <img src="../../assets/logo.png" alt="로고" class="logo" />
     </router-link>
 
-    <!-- 메뉴 -->
-    <div class="nav-container">
-      <!-- 내비게이션 링크 -->
-      <div class="nav-links">
-        <router-link
-          v-for="link in navLinks"
-          :key="link.path"
-          :to="link.path"
-          class="nav-link"
-          active-class="active"
-        >
-          {{ link.name }}
-        </router-link>
+    <!-- 전체 내비게이션 메뉴 -->
+    <div class="nav-links d-none d-md-flex">
+      <router-link
+        v-for="link in navLinks"
+        :key="link.path"
+        :to="link.path"
+        class="nav-link"
+        active-class="active"
+      >
+        {{ link.name }}
+      </router-link>
+    </div>
+
+    <!-- 모바일용 우측 햄버거 + 프로필 -->
+    <div class="nav-right d-flex align-items-center gap-3">
+      <div class="menu-toggle d-md-none" @click="toggleMenu">
+        <i class="bi bi-list"></i>
+      </div>
+      <div class="profile-menu">
+        <i
+          class="bi bi-person-circle"
+          @click="toggleProfileMenu"
+          style="cursor: pointer; font-size: 24px"
+        ></i>
+        <!-- 드롭다운 -->
+        <div v-if="showProfileMenu" class="profile-dropdown shadow-lg">
+          <div class="user-info d-flex align-items-center gap-3 mb-3">
+            <i class="bi bi-person-circle fs-2 text-primary"></i>
+            <div class="text-start">
+              <div class="fw-semibold fs-6 text-dark">{{ userNickname }}</div>
+              <div class="text-muted small">{{ userEmail }}</div>
+            </div>
+          </div>
+          <hr />
+          <button class="btn profile-btn w-100" @click="goToProfileEdit">
+            ✏️ 내 정보 수정
+          </button>
+          <button class="btn profile-btn w-100" @click="logout">
+            🔒 로그아웃
+          </button>
+        </div>
       </div>
     </div>
 
-    <!-- 우측: 프로필 아이콘 및 드롭다운 -->
-    <div class="profile-menu">
-      <i
-        class="bi bi-person-circle"
-        @click="toggleProfileMenu"
-        style="cursor: pointer; font-size: 24px"
-      ></i>
-      <!-- 드롭다운 -->
-      <div v-if="showProfileMenu" class="profile-dropdown shadow-lg">
-        <div class="user-info d-flex align-items-center gap-3 mb-3">
-          <i class="bi bi-person-circle fs-2 text-primary"></i>
-          <div class="text-start">
-            <div class="fw-semibold fs-6 text-dark">{{ userNickname }}</div>
-            <div class="text-muted small">{{ userEmail }}</div>
-          </div>
-        </div>
-        <hr />
-        <button class="btn profile-btn w-100" @click="goToProfileEdit">
-          ✏️ 내 정보 수정
-        </button>
-        <button class="btn profile-btn w-100" @click="logout">
-          🔒 로그아웃
-        </button>
-      </div>
+    <!-- 모바일 메뉴 -->
+    <div :class="['mobile-nav d-md-none', { open: isMenuOpen }]">
+      <router-link
+        v-for="link in navLinks"
+        :key="link.path"
+        :to="link.path"
+        class="nav-link"
+        active-class="active"
+        @click="isMenuOpen = false"
+      >
+        {{ link.name }}
+      </router-link>
     </div>
   </nav>
 </template>
@@ -62,14 +78,18 @@ export default {
         { name: '카드', path: '/cards' },
         { name: '환율 계산기', path: '/exchange' },
       ],
-      showProfileMenu: false, // 프로필 메뉴 토글 상태
-      userNickname: '', // 사용자 닉네임
-      userEmail: '', // 사용자 이메일
+      showProfileMenu: false,
+      isMenuOpen: false,
+      userNickname: '',
+      userEmail: '',
     };
   },
   methods: {
     toggleProfileMenu() {
       this.showProfileMenu = !this.showProfileMenu;
+    },
+    toggleMenu() {
+      this.isMenuOpen = !this.isMenuOpen;
     },
     goToProfileEdit() {
       this.$router.push('/profile-edit');
@@ -82,10 +102,8 @@ export default {
     },
   },
   mounted() {
-    const nickname = localStorage.getItem('userNickname');
-    const email = localStorage.getItem('userEmail');
-    this.userNickname = nickname || '이름 없음';
-    this.userEmail = email || '이메일 없음';
+    this.userNickname = localStorage.getItem('userNickname') || '이름 없음';
+    this.userEmail = localStorage.getItem('userEmail') || '이메일 없음';
   },
 };
 </script>
@@ -98,33 +116,12 @@ export default {
   height: 80px;
   background-color: white;
   border-bottom: 1px solid #ddd;
-
-  /* 추가: 최대 너비 설정 및 가운데 정렬 */
-  max-width: 1200px;
-  margin: 0 auto;
-  /* padding: 0 24px; */
-}
-
-.logo-link {
-  display: flex;
-  align-items: center;
+  padding: 0 16px;
 }
 
 .logo {
-  margin-top: 10px;
   height: 60px;
-}
-
-.nav-container {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-}
-
-.menu-toggle {
-  display: none;
-  font-size: 24px;
-  cursor: pointer;
+  margin-top: 10px;
 }
 
 .nav-links {
@@ -150,6 +147,11 @@ export default {
   font-weight: bold;
 }
 
+.menu-toggle {
+  font-size: 20px;
+  cursor: pointer;
+}
+
 .profile-menu {
   position: relative;
 }
@@ -167,6 +169,7 @@ export default {
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
   transition: all 0.2s ease-in-out;
 }
+
 .profile-btn {
   background-color: #e0f0ff;
   color: #0077b6;
@@ -183,13 +186,25 @@ export default {
   color: #005f99;
 }
 
-.profile-dropdown p {
-  margin: 5px 0;
-  font-size: 14px;
-  white-space: normal;
-}
-
 .user-info .text-muted {
   font-size: 0.85rem;
+}
+
+.mobile-nav {
+  display: none;
+  flex-direction: column;
+  gap: 12px;
+  position: absolute;
+  top: 80px;
+  left: 0;
+  width: 100%;
+  background-color: #fff;
+  padding: 12px 0;
+  z-index: 99;
+  border-top: 1px solid #eee;
+}
+
+.mobile-nav.open {
+  display: flex;
 }
 </style>
