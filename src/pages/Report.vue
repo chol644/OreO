@@ -201,7 +201,6 @@ export default {
   data() {
     return {
       userId: 'yerin01',
-      transactions: [],
       filters: {
         startDate: '',
         endDate: '',
@@ -310,7 +309,7 @@ export default {
       return resultString;
     },
     fetchTransactions() {
-      fetch('http://localhost:3000/users')
+      fetch('/api/users')
         .then((res) => res.json())
         .then((users) => {
           const user = users.find((u) => u.id?.trim() === this.userId?.trim());
