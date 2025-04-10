@@ -94,6 +94,7 @@ import {
   getDisplayCategory,
   removeEmoji,
 } from '@/utils/emojiMap';
+import { showAlert } from '@/utils/alert';
 
 export default {
   name: 'AddTransactionForm',
@@ -134,15 +135,21 @@ export default {
 
       try {
         if (!this.amount || this.amount <= 0) {
-          alert('금액을 올바르게 입력해주세요.');
+          showAlert({
+            text: '금액을 올바르게 입력해주세요.',
+          });
           return;
         }
         if (!this.category) {
-          alert('분류를 선택해주세요.');
+          showAlert({
+            text: '분류를 선택해주세요.',
+          });
           return;
         }
         if (!this.asset) {
-          alert('자산을 선택해주세요.');
+          showAlert({
+            text: '자산을 선택해주세요.',
+          });
           return;
         }
 

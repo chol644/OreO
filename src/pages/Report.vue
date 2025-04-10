@@ -154,8 +154,8 @@ import { ref, computed, onMounted } from 'vue';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import MonthlyReportCard from '@/components/report/MonthlyReportCard.vue';
-
 import { useTransactionStore } from '@/stores/transaction';
+
 const minimumWage = 10030;
 const showReportCard = ref(false);
 
@@ -274,6 +274,7 @@ const exportToExcel = () => {
     `MoneyCheck_거래내역_${new Date().toISOString().slice(0, 10)}.xlsx`
   );
 };
+
 onMounted(() => {
   store.fetchTransactions();
   resetFilters();

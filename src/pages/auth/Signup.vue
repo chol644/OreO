@@ -99,6 +99,7 @@
 import { ref, reactive, computed } from 'vue';
 import { useRouter } from 'vue-router'; // Import useRouter
 import axios from 'axios'; // Import axios
+import { showAlert } from '@/utils/alert';
 
 // --- Router Instance ---
 const router = useRouter();
@@ -170,7 +171,10 @@ const handleSignup = async () => {
     if (response.status === 201) {
       console.log('Signup successful:', response.data);
       // --- Signup Success ---
-      alert('회원가입 성공! 로그인 페이지로 이동합니다.');
+      showAlert({
+        title: '회원가입 성공!',
+        text: '로그인 페이지로 이동합니다.',
+      });
       router.push('/login'); // Redirect to login page
     } else {
       // Should not happen often with basic json-server POST if data format is okay

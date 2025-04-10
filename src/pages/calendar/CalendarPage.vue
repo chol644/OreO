@@ -61,20 +61,20 @@
   />
 </template>
 <script>
-import { defineComponent, onMounted } from "vue";
-import CalendarView from "@/components/calendar/CalendarView.vue";
-import TransactionsList from "@/components/dashboard/TransactionsList.vue";
-import AddTransactionForm from "@/components/transactions/AddTransactionForm.vue";
-import { useTransactionStore } from "@/stores/transaction";
-import { format } from "date-fns";
-import { ko } from "date-fns/locale";
-import { useAuthStore } from "../../stores/auth";
-import { useRouter } from "vue-router";
+import { defineComponent, onMounted } from 'vue';
+import CalendarView from '@/components/calendar/CalendarView.vue';
+import TransactionsList from '@/components/dashboard/TransactionsList.vue';
+import AddTransactionForm from '@/components/transactions/AddTransactionForm.vue';
+import { useTransactionStore } from '@/stores/transaction';
+import { format } from 'date-fns';
+import { ko } from 'date-fns/locale';
+import { useAuthStore } from '../../stores/auth';
+import { useRouter } from 'vue-router';
 
 const minimumWage = 10030;
 
 export default defineComponent({
-  name: "CalendarPage",
+  name: 'CalendarPage',
   components: {
     CalendarView,
     TransactionsList,
@@ -113,40 +113,40 @@ export default defineComponent({
       return this.incomeAmount - this.expenseAmount;
     },
     selectedMonth() {
-      return format(this.transactionsStore.selectedDate, "yyyy년 MM월");
+      return format(this.transactionsStore.selectedDate, 'yyyy년 MM월');
     },
     selectedDateFormatted() {
       return format(
         this.transactionsStore.selectedDate,
-        "yyyy년 MM월 dd일 EEEE",
+        'yyyy년 MM월 dd일 EEEE',
         { locale: ko }
       );
     },
   },
   methods: {
     formatAmount(amount) {
-      const formatted = new Intl.NumberFormat("ko-KR", {
-        style: "currency",
-        currency: "KRW",
-        currencyDisplay: "symbol",
+      const formatted = new Intl.NumberFormat('ko-KR', {
+        style: 'currency',
+        currency: 'KRW',
+        currencyDisplay: 'symbol',
       }).format(amount);
 
       // -₩10,000 → ₩-10,000 으로 바꿔줌
-      if (formatted.startsWith("-₩")) {
-        return formatted.replace("-₩", "₩-");
+      if (formatted.startsWith('-₩')) {
+        return formatted.replace('-₩', '₩-');
       }
       return formatted;
     },
     getTimeValue(amount) {
       // 시간 가치 계산 (총 시간)
-      const totalHours =  amount / minimumWage;
+      const totalHours = amount / minimumWage;
 
       // 시간과 분으로 변환
       const hours = Math.floor(totalHours); // 정수 시간
       const minutes = Math.round((totalHours - hours) * 60); // 남은 시간을 분으로 환산 후 반올림
 
       // 결과 문자열 생성
-      let resultString = "";
+      let resultString = '';
       if (hours > 0) {
         resultString += `${hours}시간 `;
       }
@@ -158,7 +158,7 @@ export default defineComponent({
     },
     openTransactionForm() {
       if (!this.authStore.isLoggedIn) {
-        this.$router.push("/login");
+        this.$router.push('/login');
       } else {
         this.showAddTransactionModal = true;
       }
@@ -180,7 +180,7 @@ export default defineComponent({
   },
   mounted() {
     if (!this.authStore.isLoggedIn) {
-      this.$router.push("/login");
+      this.$router.push('/login');
     } else {
       this.transactionsStore.fetchTransactions();
     }

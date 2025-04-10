@@ -12,6 +12,7 @@
 <script>
 import { defineComponent } from 'vue';
 import { useTransactionStore } from '@/stores/transaction';
+import { showAlert } from '@/utils/alert';
 
 export default defineComponent({
   name: 'DeleteTransactionForm',
@@ -27,10 +28,14 @@ export default defineComponent({
     const handleConfirm = async () => {
       try {
         await store.deleteTransaction(props.transactionId);
-        alert('삭제 완료!');
+        showAlert({
+          text: '삭제 완료!',
+        });
         emit('close');
       } catch (err) {
-        alert('삭제 실패!');
+        showAlert({
+          text: '삭제 실패!',
+        });
       }
     };
 
