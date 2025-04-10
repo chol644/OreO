@@ -87,23 +87,28 @@ export const useTransactionStore = defineStore('transaction', {
       }
     },
 
-    async addTransaction(newTransaction) {
+    async addTransactions(transactions) {
       const userId = localStorage.getItem('userId');
-      console.log('userId:', userId);
       if (!userId) throw new Error('userId 없음');
 
       const res = await fetch(`/api/users/${userId}`);
       if (!res.ok) throw new Error('사용자 요청 실패');
-
       const user = await res.json();
 
-      const lastId =
+      let lastId =
         user.transactions.length > 0
           ? Math.max(...user.transactions.map((t) => t.transactionId))
           : 100;
-      newTransaction.transactionId = lastId + 1;
 
-      const updatedTransactions = [...user.transactions, newTransaction];
+      const newTransactionsWithId = transactions.map((t) => ({
+        ...t,
+        transactionId: ++lastId,
+      }));
+
+      const updatedTransactions = [
+        ...user.transactions,
+        ...newTransactionsWithId,
+      ];
 
       const updateRes = await fetch(`/api/users/${userId}`, {
         method: 'PATCH',
@@ -116,9 +121,8 @@ export const useTransactionStore = defineStore('transaction', {
         throw new Error(`저장 실패: ${errorText}`);
       }
 
-      this.transactions.push(newTransaction);
+      this.transactions.push(...newTransactionsWithId);
     },
-
     async updateTransaction(updatedTransaction) {
       try {
         const userId = localStorage.getItem('userId');

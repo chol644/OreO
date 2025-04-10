@@ -58,11 +58,26 @@
         </div>
       </div>
 
-      <div class="form-actions mt-4 d-flex justify-content-between">
-        <button class="btn btn-outline-secondary" @click="$emit('close')">
+      <div class="form-actions mt-4 d-flex justify-content-between gap-2">
+        <button class="btn btn-outline-secondary w-50" @click="$emit('close')">
           취소
         </button>
-        <button class="btn btn-primary" @click="saveTransaction">저장</button>
+        <button
+          class="btn btn-primary d-flex align-items-center justify-content-center w-50"
+          @click="saveTransaction"
+          :disabled="isSaving"
+          style="height: 40px"
+        >
+          <span v-if="isSaving">
+            <span
+              class="spinner-border spinner-border-sm me-2"
+              role="status"
+              aria-hidden="true"
+            ></span>
+            저장 중입니다...
+          </span>
+          <span v-else>저장</span>
+        </button>
       </div>
     </div>
   </div>
@@ -90,6 +105,7 @@ export default {
       asset: '카드',
       memo: '',
       installmentMonths: 0,
+      isSaving: false, // ✅ 추가
     };
   },
 
@@ -113,17 +129,18 @@ export default {
       return removeEmoji(category);
     },
     async saveTransaction() {
+      if (this.isSaving) return;
+      this.isSaving = true;
+
       try {
         if (!this.amount || this.amount <= 0) {
           alert('금액을 올바르게 입력해주세요.');
           return;
         }
-
         if (!this.category) {
           alert('분류를 선택해주세요.');
           return;
         }
-
         if (!this.asset) {
           alert('자산을 선택해주세요.');
           return;
@@ -150,6 +167,8 @@ export default {
           const baseAmount = Math.floor(totalAmount / months);
           const remainder = totalAmount % months;
 
+          const transactionsToAdd = [];
+
           for (let i = 0; i < months; i++) {
             const installmentDate = new Date(baseDate);
             installmentDate.setMonth(baseDate.getMonth() + i);
@@ -157,7 +176,7 @@ export default {
             const amountThisMonth =
               i === months - 1 ? baseAmount + remainder : baseAmount;
 
-            const newTransaction = {
+            transactionsToAdd.push({
               type: this.type,
               amount: amountThisMonth,
               category: this.removeEmoji(this.category),
@@ -165,10 +184,10 @@ export default {
               memo: `${this.memo} (${i + 1}개월차 할부)`,
               date: installmentDate.toISOString(),
               installmentMonthTotal: months,
-            };
-
-            await store.addTransaction(newTransaction);
+            });
           }
+
+          await store.addTransactions(transactionsToAdd); // ✅ 새로운 메서드 사용
         }
 
         await store.fetchTransactions();
@@ -176,6 +195,8 @@ export default {
       } catch (e) {
         console.error('[저장 실패]', e);
         alert('트랜잭션 저장 중 오류가 발생했습니다.');
+      } finally {
+        this.isSaving = false;
       }
     },
   },
@@ -236,5 +257,10 @@ export default {
 
 .form-actions button {
   width: 48%;
+}
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
 }
 </style>
