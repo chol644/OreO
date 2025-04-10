@@ -80,7 +80,7 @@
           v-model="filters.memo"
           type="text"
           class="inputMemo"
-          placeholder=":돋보기: 내용 또는 메모"
+          placeholder="🔎 내용 또는 메모"
         />
       </span>
       <!-- 에크셀 다운로드 -->
@@ -98,6 +98,14 @@
             height="24"
             class="excel-icon"
           />
+        </button>
+      </span>
+      <span>
+        <button
+          class="btn btn-outline-info"
+          @click="showReportCard = !showReportCard"
+        >
+          📸 이미지 카드
         </button>
       </span>
       <span>
@@ -134,13 +142,23 @@
       </tbody>
     </table>
   </div>
+  <MonthlyReportCard
+    v-if="showReportCard"
+    :transactions="filteredTransactions"
+    :expenseTotal="expenseTotal"
+    @close="showReportCard = false"
+  />
 </template>
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
+import MonthlyReportCard from '@/components/report/MonthlyReportCard.vue';
+
 import { useTransactionStore } from '@/stores/transaction';
 const minimumWage = 10030;
+const showReportCard = ref(false);
+
 const store = useTransactionStore();
 const filters = ref({
   startDate: '',
