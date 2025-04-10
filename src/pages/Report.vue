@@ -29,7 +29,7 @@
     </div>
     <!-- 검색 결과 헤더 -->
     <div class="d-flex align-items-center m-3">
-      <span class="me-2 fw-semibold text-secondary">:전구: 검색 결과 :</span>
+      <span class="me-2 fw-semibold text-secondary">💡 검색 결과 :</span>
       <span class="badge bg-primary fs-6"
         >{{ filteredTransactions.length }} 개</span
       >
