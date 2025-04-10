@@ -80,7 +80,6 @@
 
       <!-- 메모 검색 -->
       <span class="bg-box">
-        <i class="fa-solid fa-magnifying-glass"></i>
         <input
           v-model="filters.memo"
           type="text"
@@ -104,6 +103,14 @@
             height="24"
             class="excel-icon"
           />
+        </button>
+      </span>
+      <span>
+        <button
+          class="btn btn-outline-info"
+          @click="showReportCard = !showReportCard"
+        >
+          📸 이미지 카드
         </button>
       </span>
       <span>
@@ -141,13 +148,25 @@
       </tbody>
     </table>
   </div>
+  <MonthlyReportCard
+    v-if="showReportCard"
+    :transactions="filteredTransactions"
+    :expenseTotal="expenseTotal"
+    :budget="300000"
+    @close="showReportCard = false"
+  />
 </template>
 
 <script>
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
+import MonthlyReportCard from '@/components/report/MonthlyReportCard.vue';
+
 const minimumWage = 10030;
 export default {
+  components: {
+    MonthlyReportCard,
+  },
   name: 'ReportPage',
   data() {
     return {
@@ -163,6 +182,7 @@ export default {
       sort: {
         amountAsc: null, // 금액 정렬
       },
+      showReportCard: false,
     };
   },
   computed: {
@@ -369,7 +389,7 @@ body {
   border-radius: 16px;
   padding: 24px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  max-width: 1200px;
+  max-width: 100%;
   margin: 0 auto;
   font-family: 'Noto Sans KR', sans-serif;
 }
@@ -379,7 +399,7 @@ body {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 12px;
+  gap: 6px;
   padding: 16px;
   background-color: #fff;
   border-radius: 12px;
@@ -467,7 +487,7 @@ body {
   border-radius: 12px;
   overflow-x: auto;
   width: 100%;
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
 }
 table {
