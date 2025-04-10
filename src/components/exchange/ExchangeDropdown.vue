@@ -1,35 +1,16 @@
+<!-- components/exchange/ExchangeDropdown.vue -->
 <template>
-  <div class="relative w-full" style="position: relative">
-    <!-- 선택창 -->
+  <div class="position-relative w-100">
     <div
       @click="toggleDropdown"
-      class="border p-2 rounded cursor-pointer d-flex align-items-center"
-      style="width: 100%; height: 38px; font-size: 1rem"
+      class="form-select d-flex align-items-center justify-content-between"
+      style="height: 38px; cursor: pointer"
     >
-      <img
-        :src="getFlagPath(selectedCurrency.flag)"
-        alt="flag"
-        style="width: 24px; height: 16px; object-fit: cover; border-radius: 2px"
-      />
-      <span class="ms-2">{{ selectedCurrency.name }}</span>
-      <span class="ms-auto">▼</span>
-    </div>
-
-    <!-- 드롭다운 리스트 -->
-    <ul
-      v-if="isOpen"
-      class="absolute mt-1 w-full bg-white border rounded shadow max-h-60 overflow-y-auto"
-      style="z-index: 9999"
-    >
-      <li
-        v-for="currency in currencyList"
-        :key="currency.code"
-        @click="selectCurrency(currency)"
-        class="p-2 hover:bg-gray-100 d-flex align-items-center gap-2 cursor-pointer"
-      >
+      <div class="d-flex align-items-center">
         <img
-          :src="getFlagPath(currency.flag)"
+          :src="getFlagPath(selectedCurrency.flag)"
           alt="flag"
+          class="me-2"
           style="
             width: 24px;
             height: 16px;
@@ -37,7 +18,33 @@
             border-radius: 2px;
           "
         />
-        <span>{{ currency.name }}</span>
+        <span>{{ selectedCurrency.name }}</span>
+      </div>
+    </div>
+
+    <ul
+      v-if="isOpen"
+      class="list-group position-absolute w-100 z-3 shadow"
+      style="max-height: 200px; overflow-y: auto"
+    >
+      <li
+        v-for="currency in currencyList"
+        :key="currency.code"
+        @click="selectCurrency(currency)"
+        class="list-group-item list-group-item-action d-flex align-items-center"
+      >
+        <img
+          :src="getFlagPath(currency.flag)"
+          alt="flag"
+          class="me-2"
+          style="
+            width: 24px;
+            height: 16px;
+            object-fit: cover;
+            border-radius: 2px;
+          "
+        />
+        {{ currency.name }}
       </li>
     </ul>
   </div>
@@ -60,9 +67,9 @@ const selectCurrency = (currency) => {
   isOpen.value = false;
 };
 
-const selectedCurrency = computed(() => {
-  return props.currencyList.find((c) => c.code === props.modelValue);
-});
+const selectedCurrency = computed(() =>
+  props.currencyList.find((c) => c.code === props.modelValue)
+);
 
 const getFlagPath = (filename) => {
   return new URL(`/src/assets/flags/${filename}`, import.meta.url).href;

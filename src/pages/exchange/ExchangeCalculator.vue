@@ -1,77 +1,71 @@
 <template>
-  <div
-    class="p-6 mx-auto bg-white rounded shadow-md space-y-4 text-center"
-    style="max-width: 600px"
-  >
-    <h2 class="text-xl font-bold">환율 계산기</h2>
-    <p
-      class="text-muted mt-3 fw-bold"
-      style="margin-top: -8px; font-size: 0.95rem"
-    >
-      {{ directionText }}
-    </p>
-    <div class="d-flex justify-content-center align-items-center gap-4 mt-3">
+  <div class="card shadow-lg p-4 mx-auto mt-5" style="max-width: 600px">
+    <h4 class="text-center fw-bold mb-1">환율 계산기</h4>
+    <p class="text-center text-muted mb-4">{{ directionText }}</p>
+
+    <div class="row g-3 align-items-end justify-content-center">
       <!-- 왼쪽 -->
-      <div style="width: 220px">
+      <div class="col-5">
         <label class="form-label">
           {{ isReversed ? '기준 통화' : 'KRW' }}
         </label>
-        <template v-if="isReversed">
+        <div v-if="isReversed">
           <ExchangeDropdown
             v-model="targetCurrency"
             :currencyList="currencyList"
-            style="width: 100%; height: 38px; font-size: 1rem"
+            class="form-select"
           />
-        </template>
-        <template v-else>
+        </div>
+        <div v-else>
           <input
             v-model.number="amount"
             type="number"
             class="form-control"
-            style="height: 38px; font-size: 1rem"
+            placeholder="금액 입력"
           />
-        </template>
+        </div>
       </div>
 
-      <!-- 아이콘 -->
-      <div class="d-flex align-items-center" style="height: 58px">
-        <i
-          class="bi bi-arrow-left-right fs-4 text-dark cursor-pointer"
+      <!-- 전환 아이콘 -->
+      <div class="col-auto">
+        <button
+          class="btn btn-outline-secondary btn-sm rounded-circle border-0 swap-btn"
           @click="swapCurrency"
           title="기준 통화 전환"
-        ></i>
+        >
+          <i class="bi bi-arrow-left-right fs-4"></i>
+        </button>
       </div>
 
       <!-- 오른쪽 -->
-      <div style="width: 220px">
+      <div class="col-5">
         <label class="form-label">
           {{ isReversed ? targetCurrency.toUpperCase() : '환전 통화' }}
         </label>
-        <template v-if="isReversed">
+        <div v-if="isReversed">
           <input
             v-model.number="amount"
             type="number"
             class="form-control"
-            style="height: 38px; font-size: 1rem"
+            placeholder="금액 입력"
           />
-        </template>
-        <template v-else>
-          <ExchangeDropdown
-            v-model="targetCurrency"
-            :currencyList="currencyList"
-            style="width: 100%; height: 38px; font-size: 1rem"
-          />
-        </template>
+        </div>
+        <ExchangeDropdown
+          v-model="targetCurrency"
+          :currencyList="currencyList"
+        />
       </div>
     </div>
 
-    <!-- 결과 출력 -->
-    <div v-if="exchangeRate" class="text-lg fw-bold text-success mt-3">
-      {{
-        isReversed
-          ? ` ${amount.toLocaleString()} ${targetCurrency.toUpperCase()} = ${convertedAmount} KRW`
-          : `${amount.toLocaleString()} KRW = ${convertedAmount} ${targetCurrency.toUpperCase()}`
-      }}
+    <!-- 결과 -->
+    <div v-if="exchangeRate" class="mt-4 text-center">
+      <div class="alert alert-success fw-bold mb-0" style="font-size: 1.1rem">
+        {{
+          isReversed
+            ? `${amount.toLocaleString()} ${targetCurrency.toUpperCase()} = ${convertedAmount} KRW`
+            : `${amount.toLocaleString()} KRW = ${convertedAmount} ${targetCurrency.toUpperCase()}`
+        }}
+      </div>
     </div>
   </div>
 </template>
@@ -136,16 +130,14 @@ const swapCurrency = () => {
   isReversed.value = !isReversed.value;
 };
 </script>
-
 <style scoped>
-label {
-  display: block;
-  margin-bottom: 4px;
-  font-weight: 500;
+.swap-btn {
+  background-color: #f8f9fa;
+  transition: transform 0.2s ease;
 }
-
-.cursor-pointer {
-  cursor: pointer;
+.swap-btn:hover {
+  transform: rotate(180deg);
+  background-color: #e9ecef;
 }
 
 /* 스핀 버튼 제거 */
