@@ -16,7 +16,7 @@ export default defineConfig({
     // 서버 프록시 설정
     proxy: {
       '/api': {
-        target: 'https://moneycheck.glitch.me',
+        target: 'https://money-check.glitch.me',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
       },
