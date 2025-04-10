@@ -47,6 +47,11 @@ const router = createRouter({
       component: () => import('@/pages//ChartVIew/ChartView.vue'),
     },
     {
+      path: '/news',
+      name: 'News',
+      component: () => import('@/pages/news/EconomyNews.vue'),
+    },
+    {
       path: '/:pathMatch(.*)*',
       name: 'NotFound',
       component: () => import('@/pages/NotFound.vue'),
