@@ -160,6 +160,7 @@ const handleLogin = async () => {
         // Note: json-server will filter the array based on these params
       },
     });
+    console.log(response.data);
 
     // axios automatically parses JSON, data is in `response.data`
     const matchingUsers = response.data;
