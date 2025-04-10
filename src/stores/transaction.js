@@ -41,6 +41,9 @@ export const useTransactionStore = defineStore('transaction', {
     },
   },
   actions: {
+    async addTransaction(transaction) {
+      await this.addTransactions([transaction]);
+    },
     loadTransactionsFromLocal() {
       const saved = localStorage.getItem('transactions');
       if (saved) {
