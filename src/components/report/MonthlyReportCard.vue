@@ -8,7 +8,7 @@
         <i class="fas fa-download"></i> 저장
       </button>
       <div id="shareCard" class="report-card">
-        <h2>📆 이달의 소비 요약</h2>
+        <h2>📅 소비 요약</h2>
         <p class="amount">💸 총 지출: ₩{{ formatAmount(expenseTotal) }}</p>
         <p class="category">
           📌 가장 많이 쓴 곳은<br />
