@@ -64,6 +64,7 @@ export default {
         { name: '달력', path: '/' },
         { name: '내역', path: '/report' },
         { name: '차트', path: '/chart' },
+        { name: '뉴스', path: '/news' },
       ],
       showProfileMenu: false, // 프로필 메뉴 토글 상태
       userNickname: '', // 사용자 닉네임
