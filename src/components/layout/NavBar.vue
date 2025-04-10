@@ -66,6 +66,9 @@
 </template>
 
 <script>
+import { mapState } from 'pinia';
+import { useAuthStore } from '@/stores/auth';
+
 export default {
   name: 'NavBar',
   data() {
@@ -80,8 +83,6 @@ export default {
       ],
       showProfileMenu: false,
       isMenuOpen: false,
-      userNickname: '',
-      userEmail: '',
     };
   },
   methods: {
@@ -101,9 +102,8 @@ export default {
       this.$router.push('/login');
     },
   },
-  mounted() {
-    this.userNickname = localStorage.getItem('userNickname') || '이름 없음';
-    this.userEmail = localStorage.getItem('userEmail') || '이메일 없음';
+  computed: {
+    ...mapState(useAuthStore, ['userNickname', 'userEmail']),
   },
 };
 </script>

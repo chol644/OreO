@@ -6,6 +6,8 @@ export const useAuthStore = defineStore('auth', {
   }),
   getters: {
     isLoggedIn: (state) => !!state.user,
+    userNickname: (state) => state.user?.nickname || '이름 없음',
+    userEmail: (state) => state.user?.email || '이메일 없음',
   },
   actions: {
     setUser(user) {
