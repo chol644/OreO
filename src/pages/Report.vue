@@ -45,7 +45,7 @@
       <!-- 자사필터 -->
       <span>
         <button class="btn btn-outline-dark bg-light" @click="toggleAsset">
-          자사: {{ filters.asset || '전체' }}
+          자산: {{ filters.asset || '전체' }}
         </button>
       </span>
       <!-- 분류 필터 -->
@@ -124,7 +124,7 @@
         <tr>
           <th>No.</th>
           <th>날짜</th>
-          <th>자사</th>
+          <th>자산</th>
           <th>분류</th>
           <th>금액</th>
           <th>내용</th>
