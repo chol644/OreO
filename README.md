@@ -53,7 +53,7 @@
 ---
 
 ## 서비스 URL
-[Money Check 바로가기](https://money-check-lake.vercel.app/)
+[Money Check 바로가기](https://money-check-nine.vercel.app/)
 
 ---
 
