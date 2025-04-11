@@ -52,6 +52,11 @@
 
 ---
 
+## 서비스 URL
+[Money Check 바로가기](https://money-check-lake.vercel.app/)
+
+---
+
 ## 🧑‍💻 Team Members
 
 | chol644 | Yerin Shin | goldsergeant | HyoSang Byun |
@@ -67,7 +72,7 @@
 - **UI 프레임워크**: Bootstrap  
 - **API 통신**: Axios  
 - **날짜 처리**: date-fns
-
+- **차트**: chart.js
 ---
 
 ### 💡 주요 기능
