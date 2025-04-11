@@ -83,13 +83,13 @@
           placeholder="🔎 내용 또는 메모"
         />
       </span>
-      <!-- 에크셀 다운로드 -->
+      <!-- Excel 다운로드 -->
       <span>
         <button
           class="btn btn-outline-success d-flex justify-content-center align-items-center p-0"
           @click="exportToExcel"
           style="width: 40px; height: 40px"
-          title="에크셀 다운로드"
+          title="Excel 다운로드"
         >
           <img
             src="@/assets/excel_icon.png"
